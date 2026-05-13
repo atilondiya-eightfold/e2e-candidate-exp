@@ -226,12 +226,24 @@ export function usePrepData(applicationId: string): PrepDataResult {
 			};
 		}
 
-		// "populated" — use the API; fall back to fixture on any failure.
+		// "populated" — use the API. Surface real errors instead of masking
+		// them with the fixture so misconfigured creds / URLs are visible.
+		// Toggle DemoToolbar to "empty" / "loading" / "error" for design QA.
 		if (appQ.isLoading) {
 			return { state: "loading", data: null, source: "api" };
 		}
 		if (appQ.isError || !appQ.data) {
-			return { state: "ready", data: populatedState, source: "fixture" };
+			const err = appQ.error as { status?: number; message?: string } | null;
+			const ref =
+				err?.status !== undefined
+					? `api-${err.status}`
+					: "api-unreachable";
+			return {
+				state: "error",
+				data: null,
+				source: "api",
+				errorReference: ref,
+			};
 		}
 
 		const application = buildApplicationSummary(applicationId, appQ.data);
@@ -244,12 +256,10 @@ export function usePrepData(applicationId: string): PrepDataResult {
 			covered: dims.filter((d) => d.severity === "covered").length,
 		};
 		const readinessPct = readinessQ.data?.score ?? 0;
-		const mocks = mocksQ.data
-			? mocksFromApi(mocksQ.data)
-			: populatedState.mocks;
-		const studyPlan = studyPlanQ.data
-			? studyPlanFromApi(studyPlanQ.data)
-			: populatedState.studyPlan;
+		// Empty arrays (not the fixture) when the API hasn't surfaced these
+		// yet — the fixture only shows up under explicit DemoToolbar override.
+		const mocks = mocksQ.data ? mocksFromApi(mocksQ.data) : [];
+		const studyPlan = studyPlanQ.data ? studyPlanFromApi(studyPlanQ.data) : null;
 
 		const data: PrepState = {
 			application,
