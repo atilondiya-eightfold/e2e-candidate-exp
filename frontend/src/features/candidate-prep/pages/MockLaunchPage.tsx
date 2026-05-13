@@ -4,6 +4,7 @@ import { useState, type ReactElement } from "react";
 import { ErrorPanel } from "../components/ErrorPanel";
 import { PillButton } from "../components/PillButton";
 import { TopNav } from "../components/TopNav";
+import { useApplication, useCreateMock } from "../hooks";
 import { focusChipsByMock, meetingDetails } from "../mocks/data";
 import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
@@ -18,6 +19,14 @@ export function MockLaunchPage({ applicationId }: Props): ReactElement {
 	const [showMicTest, setShowMicTest] = useState(false);
 	const [connectError, setConnectError] = useState(false);
 	const s = strings.mockLaunch;
+
+	const appQ = useApplication(
+		demoState === "populated" ? applicationId : undefined,
+	);
+	const createMock = useCreateMock();
+
+	// Focus chips come from the gap-analysis pickdown when the API is live;
+	// fall back to the fixture when offline.
 	const focus = focusChipsByMock["mock_2"];
 
 	const backToHub = () =>
@@ -27,7 +36,26 @@ export function MockLaunchPage({ applicationId }: Props): ReactElement {
 			setConnectError(true);
 			return;
 		}
-		// Pretend we launched the meeting in a new tab; transition our tab to in-progress.
+		// If we have a real application id from the API, create the mock then
+		// transition; otherwise fall back to the fixture mock id.
+		if (appQ.data?.application_id) {
+			createMock.mutate(
+				{ applicationId: appQ.data.application_id },
+				{
+					onSuccess: (mock) => {
+						if (mock.meeting?.url) {
+							console.log("[candidate-prep] opening meeting", mock.meeting.url);
+						}
+						navigate({
+							to: "/prep/$applicationId/mock/$mockId/active",
+							params: { applicationId, mockId: mock.mock_id },
+						});
+					},
+					onError: () => setConnectError(true),
+				},
+			);
+			return;
+		}
 		console.log("[candidate-prep] opening meeting", meetingDetails.url);
 		navigate({
 			to: "/prep/$applicationId/mock/$mockId/active",

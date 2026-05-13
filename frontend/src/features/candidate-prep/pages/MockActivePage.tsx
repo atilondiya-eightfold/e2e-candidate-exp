@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactElement } from "react";
 import { ErrorPanel } from "../components/ErrorPanel";
 import { PillButton } from "../components/PillButton";
 import { TopNav } from "../components/TopNav";
+import { useDiscardMock, useMockStatus } from "../hooks";
 import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
 
@@ -19,6 +20,20 @@ export function MockActivePage({ applicationId, mockId }: Props): ReactElement {
 	const demoState = usePrepDemoStore((s) => s.state);
 	const [phase, setPhase] = useState<Phase>("in_progress");
 	const [elapsedSec, setElapsedSec] = useState(0);
+
+	// Poll server status when API is available. When it flips to terminal
+	// state, we transition the page. Status poll has its own 3s interval.
+	const statusQ = useMockStatus(
+		demoState === "populated" && phase === "in_progress" ? mockId : undefined,
+	);
+	const discardMut = useDiscardMock();
+
+	useEffect(() => {
+		const s = statusQ.data?.status;
+		if (!s) return;
+		if (s === "completed" || s === "processing") setPhase("processing");
+		else if (s === "dropped") setPhase("dropped");
+	}, [statusQ.data?.status]);
 
 	useEffect(() => {
 		if (phase !== "in_progress") return;
@@ -48,6 +63,11 @@ export function MockActivePage({ applicationId, mockId }: Props): ReactElement {
 			setPhase("processing");
 		}
 	};
+
+	const discardAndGoHome = () => {
+		discardMut.mutate(mockId, { onSettled: backToHub });
+	};
+	void discardAndGoHome;
 
 	const fmtElapsed = (sec: number) => {
 		const m = Math.floor(sec / 60)

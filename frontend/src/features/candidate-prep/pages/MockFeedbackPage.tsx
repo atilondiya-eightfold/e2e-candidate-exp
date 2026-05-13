@@ -4,13 +4,20 @@ import type { ReactElement } from "react";
 import { PillButton } from "../components/PillButton";
 import { TopNav } from "../components/TopNav";
 import { TopicChips } from "../components/TopicChips";
+import { useMockFeedback } from "../hooks";
+import type {
+	FeedbackDimension as ApiFeedbackDimension,
+	FeedbackMoment as ApiFeedbackMoment,
+	MockFeedback as ApiMockFeedback,
+} from "../api/types";
 import {
-	mockFeedback,
+	mockFeedback as fixtureFeedback,
 	type DimensionLevel,
 	type DimensionScore,
 	type GapSeverity,
 	type TranscriptMoment,
 } from "../mocks/data";
+import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
 
 interface Props {
@@ -33,6 +40,43 @@ const LEVEL_STYLES: Record<
 	strong: { border: "#16a34a", bg: "#f0fdf4", fg: "#16a34a", tag: "STRONG" },
 };
 
+function apiFeedbackToDisplay(api: ApiMockFeedback) {
+	const dimensions: DimensionScore[] = api.dimensions.map(
+		(d: ApiFeedbackDimension) => ({
+			dimensionId: d.dimension_id,
+			name: d.name,
+			level: d.level,
+			comment: d.comment,
+			studyTopics: d.study_topics.map((c) => ({ id: c.id, label: c.label })),
+		}),
+	);
+	const moments: TranscriptMoment[] = api.moments.map(
+		(m: ApiFeedbackMoment) => ({
+			id: m.id,
+			timestamp: m.timestamp,
+			level: m.level,
+			quote: m.quote,
+			annotation: m.annotation ?? undefined,
+		}),
+	);
+	const date = new Date(api.completed_at * 1000);
+	return {
+		mockId: api.mock_id,
+		mockNumber: api.mock_number,
+		title: api.title,
+		dateLabel: date.toLocaleDateString(undefined, {
+			month: "short",
+			day: "numeric",
+		}),
+		durationMin: Math.round(api.duration_sec / 60),
+		score: api.score,
+		delta: api.delta_vs_previous,
+		miraSummary: api.mira_summary,
+		dimensions,
+		moments,
+	};
+}
+
 const LEVEL_TO_SEVERITY: Record<DimensionLevel, GapSeverity> = {
 	weak: "high",
 	partial: "medium",
@@ -42,7 +86,11 @@ const LEVEL_TO_SEVERITY: Record<DimensionLevel, GapSeverity> = {
 
 export function MockFeedbackPage({ applicationId, mockId }: Props): ReactElement {
 	const navigate = useNavigate();
-	const fb = mockFeedback[mockId] ?? mockFeedback["mock_2"]!;
+	const demoState = usePrepDemoStore((st) => st.state);
+	const apiQ = useMockFeedback(demoState === "populated" ? mockId : undefined);
+	const fb = apiQ.data
+		? apiFeedbackToDisplay(apiQ.data)
+		: (fixtureFeedback[mockId] ?? fixtureFeedback["mock_2"]!);
 	const s = strings.mockFeedback;
 
 	const goStudy = () =>

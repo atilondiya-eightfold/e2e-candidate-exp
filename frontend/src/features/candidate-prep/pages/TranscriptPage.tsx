@@ -2,7 +2,9 @@ import { useNavigate } from "@tanstack/react-router";
 import type { ReactElement } from "react";
 
 import { TopNav } from "../components/TopNav";
-import { transcriptByMock } from "../mocks/data";
+import { useMockTranscript } from "../hooks";
+import { transcriptByMock, type TranscriptTurn } from "../mocks/data";
+import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
 
 interface Props {
@@ -12,7 +14,17 @@ interface Props {
 
 export function TranscriptPage({ applicationId, mockId }: Props): ReactElement {
 	const navigate = useNavigate();
-	const turns = transcriptByMock[mockId] ?? transcriptByMock["mock_2"] ?? [];
+	const demoState = usePrepDemoStore((st) => st.state);
+	const apiQ = useMockTranscript(demoState === "populated" ? mockId : undefined);
+	const turns: TranscriptTurn[] = apiQ.data
+		? apiQ.data.turns.map((t) => ({
+				id: t.id,
+				speaker: t.speaker,
+				timestamp: t.timestamp,
+				text: t.text,
+				highlight: t.highlight ?? undefined,
+			}))
+		: (transcriptByMock[mockId] ?? transcriptByMock["mock_2"] ?? []);
 	const s = strings.transcript;
 
 	return (
