@@ -1,0 +1,194 @@
+<h2>Gap report — how should the weak areas be presented?</h2>
+<p class="subtitle">Sourced from the matching graph (role_skill_gap_based_feed). Candidate sees this either as the first thing after they enter the app (no mock yet) or via the "Gap report" tile on the hub.</p>
+
+<div class="split">
+
+<!-- A: Ranked list with severity -->
+<div class="mockup">
+<div class="mockup-header">A · Ranked list with severity</div>
+<div class="mockup-body">
+<div style="font-family:-apple-system,sans-serif;background:#f5f6f8;padding:16px;min-height:600px">
+
+  <div style="font-size:11px;color:#6b7280;margin-bottom:6px"><span style="color:#1f3a68">← Hub</span> · Gap report</div>
+  <div style="font-size:20px;font-weight:700;color:#111">Your skill gaps for Staff SWE @ Google</div>
+  <div style="font-size:12px;color:#6b7280;margin:4px 0 16px">Based on your profile vs. the role. Ranked by how much they'd hurt you in an interview.</div>
+
+  <!-- Severity summary -->
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <div style="flex:1;background:#fef2f2;padding:10px;border-radius:8px;text-align:center">
+      <div style="font-size:18px;font-weight:800;color:#dc2626">2</div>
+      <div style="font-size:10px;color:#dc2626;font-weight:600">High</div>
+    </div>
+    <div style="flex:1;background:#fffbeb;padding:10px;border-radius:8px;text-align:center">
+      <div style="font-size:18px;font-weight:800;color:#d97706">3</div>
+      <div style="font-size:10px;color:#d97706;font-weight:600">Medium</div>
+    </div>
+    <div style="flex:1;background:#f0fdf4;padding:10px;border-radius:8px;text-align:center">
+      <div style="font-size:18px;font-weight:800;color:#16a34a">8</div>
+      <div style="font-size:10px;color:#16a34a;font-weight:600">Already covered</div>
+    </div>
+  </div>
+
+  <!-- gap list -->
+  <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden">
+
+    <div style="padding:12px 14px;border-bottom:1px solid #f1f3f5;display:flex;align-items:start;gap:10px">
+      <div style="width:6px;align-self:stretch;background:#dc2626;border-radius:3px;margin-top:2px;margin-bottom:2px"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:13px;font-weight:700;color:#111">Distributed consensus</div>
+          <div style="font-size:10px;color:#dc2626;font-weight:700;background:#fef2f2;padding:2px 8px;border-radius:10px">HIGH</div>
+        </div>
+        <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.45">Required at L6+. Your profile shows Postgres &amp; Kafka but no Raft / Paxos exposure. Likely probed in onsite.</div>
+      </div>
+    </div>
+
+    <div style="padding:12px 14px;border-bottom:1px solid #f1f3f5;display:flex;align-items:start;gap:10px">
+      <div style="width:6px;align-self:stretch;background:#dc2626;border-radius:3px;margin-top:2px;margin-bottom:2px"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:13px;font-weight:700;color:#111">CAP / consistency models</div>
+          <div style="font-size:10px;color:#dc2626;font-weight:700;background:#fef2f2;padding:2px 8px;border-radius:10px">HIGH</div>
+        </div>
+        <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.45">You've worked with eventually-consistent systems but haven't named tradeoffs explicitly in your projects.</div>
+      </div>
+    </div>
+
+    <div style="padding:12px 14px;border-bottom:1px solid #f1f3f5;display:flex;align-items:start;gap:10px">
+      <div style="width:6px;align-self:stretch;background:#d97706;border-radius:3px;margin-top:2px;margin-bottom:2px"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:13px;font-weight:700;color:#111">Hot-key / sharding strategies</div>
+          <div style="font-size:10px;color:#d97706;font-weight:700;background:#fffbeb;padding:2px 8px;border-radius:10px">MEDIUM</div>
+        </div>
+        <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.45">Standard hash partitioning visible in your work; range/composite less common.</div>
+      </div>
+    </div>
+
+    <div style="padding:12px 14px;border-bottom:1px solid #f1f3f5;display:flex;align-items:start;gap:10px">
+      <div style="width:6px;align-self:stretch;background:#d97706;border-radius:3px;margin-top:2px;margin-bottom:2px"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:13px;font-weight:700;color:#111">Multi-region failover</div>
+          <div style="font-size:10px;color:#d97706;font-weight:700;background:#fffbeb;padding:2px 8px;border-radius:10px">MEDIUM</div>
+        </div>
+        <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.45">Your services are single-region today; Google's scale assumes multi-region by default.</div>
+      </div>
+    </div>
+
+    <div style="padding:12px 14px;display:flex;align-items:start;gap:10px">
+      <div style="width:6px;align-self:stretch;background:#d97706;border-radius:3px;margin-top:2px;margin-bottom:2px"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:13px;font-weight:700;color:#111">Streaming / event sourcing</div>
+          <div style="font-size:10px;color:#d97706;font-weight:700;background:#fffbeb;padding:2px 8px;border-radius:10px">MEDIUM</div>
+        </div>
+        <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.45">Kafka usage visible but no event-sourcing or CDC pattern in your projects.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:14px;background:#1f3a68;color:#fff;padding:11px;border-radius:10px;font-size:12.5px;font-weight:600;text-align:center">🎤 Practice these in a 25-min mock →</div>
+
+</div>
+</div>
+</div>
+
+<!-- B: Radar + cluster view -->
+<div class="mockup">
+<div class="mockup-header">B · Radar chart + topic clusters</div>
+<div class="mockup-body">
+<div style="font-family:-apple-system,sans-serif;background:#fff;padding:16px;min-height:600px">
+
+  <div style="font-size:11px;color:#6b7280;margin-bottom:6px"><span style="color:#1f3a68">← Hub</span> · Gap report</div>
+  <div style="font-size:20px;font-weight:700;color:#111">Your skill gaps for Staff SWE @ Google</div>
+  <div style="font-size:12px;color:#6b7280;margin:4px 0 16px">Where your profile maps against the role's expected dimensions.</div>
+
+  <!-- Radar mock (SVG) -->
+  <div style="display:flex;justify-content:center;margin-bottom:14px">
+    <svg viewBox="0 0 240 220" width="240" height="220">
+      <!-- pentagon rings -->
+      <polygon points="120,30 207,90 174,196 66,196 33,90" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+      <polygon points="120,60 175,98 152,170 88,170 65,98" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+      <polygon points="120,90 144,106 131,144 109,144 96,106" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+      <!-- spokes -->
+      <line x1="120" y1="110" x2="120" y2="30" stroke="#e5e7eb"/>
+      <line x1="120" y1="110" x2="207" y2="90" stroke="#e5e7eb"/>
+      <line x1="120" y1="110" x2="174" y2="196" stroke="#e5e7eb"/>
+      <line x1="120" y1="110" x2="66" y2="196" stroke="#e5e7eb"/>
+      <line x1="120" y1="110" x2="33" y2="90" stroke="#e5e7eb"/>
+      <!-- target (role required) -->
+      <polygon points="120,30 207,90 174,196 66,196 33,90" fill="#1f3a68" fill-opacity="0.1" stroke="#1f3a68" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <!-- candidate -->
+      <polygon points="120,80 175,98 152,170 88,170 50,95" fill="#7c3aed" fill-opacity="0.35" stroke="#7c3aed" stroke-width="2"/>
+      <!-- labels -->
+      <text x="120" y="22" text-anchor="middle" font-size="10" fill="#374151" font-weight="600">Scaling</text>
+      <text x="215" y="92" font-size="10" fill="#374151" font-weight="600">Data model</text>
+      <text x="180" y="208" font-size="10" fill="#dc2626" font-weight="700">Consistency</text>
+      <text x="22" y="208" font-size="10" fill="#d97706" font-weight="700">Failure</text>
+      <text x="3" y="92" font-size="10" fill="#374151" font-weight="600">Delivery</text>
+    </svg>
+  </div>
+
+  <div style="display:flex;gap:10px;justify-content:center;font-size:10.5px;color:#6b7280;margin-bottom:14px">
+    <span><span style="display:inline-block;width:10px;height:10px;background:#7c3aed;opacity:.5;border-radius:2px"></span> You</span>
+    <span><span style="display:inline-block;width:10px;height:10px;background:#1f3a68;opacity:.3;border-radius:2px;border:1px dashed #1f3a68"></span> Role bar</span>
+  </div>
+
+  <!-- Topic clusters -->
+  <div style="font-size:10.5px;color:#1f3a68;font-weight:700;letter-spacing:.06em;margin-bottom:8px">WIDEST GAPS — TOPICS TO STUDY</div>
+
+  <div style="background:#fef2f2;border-radius:10px;padding:12px;margin-bottom:8px">
+    <div style="font-size:12px;font-weight:700;color:#dc2626;margin-bottom:6px">Consistency · HIGH</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <div style="background:#fff;border:1px solid #fca5a5;color:#dc2626;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:600">Quorum reads</div>
+      <div style="background:#fff;border:1px solid #fca5a5;color:#dc2626;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:600">Read-your-writes</div>
+      <div style="background:#fff;border:1px solid #fca5a5;color:#dc2626;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:600">Vector clocks</div>
+    </div>
+  </div>
+
+  <div style="background:#fffbeb;border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:700;color:#d97706;margin-bottom:6px">Failure modes · MEDIUM</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <div style="background:#fff;border:1px solid #fcd34d;color:#d97706;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:600">Region failover</div>
+      <div style="background:#fff;border:1px solid #fcd34d;color:#d97706;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:600">Graceful degradation</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px">
+    <div style="flex:1;background:#1f3a68;color:#fff;padding:11px;border-radius:10px;font-size:12px;font-weight:600;text-align:center">🎤 Mock these →</div>
+    <div style="flex:1;background:#fff;color:#1f3a68;border:1px solid #1f3a68;padding:11px;border-radius:10px;font-size:12px;font-weight:600;text-align:center">📚 Study plan</div>
+  </div>
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="options" style="margin-top:24px">
+  <div class="option" data-choice="ranked" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Ranked list with severity</h3>
+      <p>Severity counts at top (high / medium / covered), then a clean ordered list. Each row: dimension name + severity badge + one-sentence "why this is a gap" pulled from the matching graph. Optimized for "tell me what to fix, in order."</p>
+    </div>
+  </div>
+  <div class="option" data-choice="radar" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Radar + topic clusters</h3>
+      <p>Pentagon radar showing candidate (purple) vs. role expectation (dashed navy) at a glance. Below it, the weakest dimensions break out into <b>topic chips</b> — the same kind of chip you locked in for feedback. Visual hook + scannable next-steps.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="hybrid-gap" onclick="toggleSelect(this)">
+    <div class="letter">H</div>
+    <div class="content">
+      <h3>Hybrid — severity counts + topic chips (no radar)</h3>
+      <p>A's severity counts at top, B's topic-chip clusters below grouped by severity. Drops the radar (radar charts look impressive but candidates rarely understand them at a glance). Same chip vocabulary as the feedback screen, which means the candidate sees the same "Quorum reads" chip in gap report → in feedback → in study plan. Strong consistency cue.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:18px;font-size:13px"><b>My recommendation: H (hybrid).</b> The radar is pretty but it's the wrong unit for "what should I study next" — chips are the unit. Reusing the chip vocabulary across gap report, feedback, and study plan makes the whole app feel like one coherent system instead of three separate screens.</p>

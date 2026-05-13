@@ -1,0 +1,151 @@
+/**
+ * Octuple DS Theme 2 - Color palette
+ * Figma (node 11686:119298): https://www.figma.com/design/SlKRC7oKF7XZyHMv2op4ch/Octuple-DS--Theme-2-?m=auto&node-id=11686-119298
+ * Scale: 100 (darkest) → 10, 0 (lightest). Use --color-{family}-{step} in CSS.
+ */
+:root {
+  /* Grey */
+  --color-grey-100: #05070A;
+  --color-grey-90: #1A212E;
+  --color-grey-80: #343C4C;
+  --color-grey-70: #4F5666;
+  --color-grey-60: #69717F;
+  --color-grey-50: #858B98;
+  --color-grey-40: #A1A6B1;
+  --color-grey-30: #BDC1C9;
+  --color-grey-20: #D9DCE1;
+  --color-grey-10: #F6F7F8;
+  --color-grey-0: #FFFFFF;
+
+  /* Blue */
+  --color-blue-100: #00060A;
+  --color-blue-90: #002A47;
+  --color-blue-80: #054D7B;
+  --color-blue-70: #146DA6;
+  --color-blue-60: #2C8CC9;
+  --color-blue-50: #47A4DF;
+  --color-blue-40: #68BAEF;
+  --color-blue-30: #8ED0FA;
+  --color-blue-20: #BCE4FF;
+  --color-blue-10: #EBF7FF;
+
+  /* Blue-green */
+  --color-blue-green-100: #00090A;
+  --color-blue-green-90: #00333B;
+  --color-blue-green-80: #025966;
+  --color-blue-green-70: #0B7B8B;
+  --color-blue-green-60: #1999AC;
+  --color-blue-green-50: #2DB3C7;
+  --color-blue-green-40: #50CEE1;
+  --color-blue-green-30: #7BE4F4;
+  --color-blue-green-20: #B0F3FE;
+  --color-blue-green-10: #EBFDFF;
+
+  /* Blue-violet */
+  --color-blue-violet-100: #090B1F;
+  --color-blue-violet-90: #191D4A;
+  --color-blue-violet-80: #2B3271;
+  --color-blue-violet-70: #414996;
+  --color-blue-violet-60: #5962B7;
+  --color-blue-violet-50: #757ED6;
+  --color-blue-violet-40: #8C95E8;
+  --color-blue-violet-30: #A9B0F5;
+  --color-blue-violet-20: #CACFFC;
+  --color-blue-violet-10: #F1F2FF;
+
+  /* Violet */
+  --color-violet-100: #060106;
+  --color-violet-90: #350E31;
+  --color-violet-80: #5D2156;
+  --color-violet-70: #7E3A77;
+  --color-violet-60: #975590;
+  --color-violet-50: #AE72A8;
+  --color-violet-40: #C491BF;
+  --color-violet-30: #D8B1D4;
+  --color-violet-20: #EAD3E8;
+  --color-violet-10: #FBF6FB;
+
+  /* Violet-red */
+  --color-violet-red-100: #1F0816;
+  --color-violet-red-90: #491635;
+  --color-violet-red-80: #702853;
+  --color-violet-red-70: #943D71;
+  --color-violet-red-60: #B5548E;
+  --color-violet-red-50: #D36FAB;
+  --color-violet-red-40: #E688C0;
+  --color-violet-red-30: #F3A5D4;
+  --color-violet-red-20: #FCC8E7;
+  --color-violet-red-10: #FFF0F9;
+
+  /* Red */
+  --color-red-100: #0A0202;
+  --color-red-90: #3B1010;
+  --color-red-80: #6C2222;
+  --color-red-70: #993838;
+  --color-red-60: #C15151;
+  --color-red-50: #E46F6F;
+  --color-red-40: #F48686;
+  --color-red-30: #FFA3A3;
+  --color-red-20: #FFC6C6;
+  --color-red-10: #FFEFEF;
+
+  /* Red-orange */
+  --color-red-orange-100: #1F0C03;
+  --color-red-orange-90: #4C1F0C;
+  --color-red-orange-80: #78351A;
+  --color-red-orange-70: #A54D2C;
+  --color-red-orange-60: #D26743;
+  --color-red-orange-50: #F8845F;
+  --color-red-orange-40: #FF9977;
+  --color-red-orange-30: #FFB396;
+  --color-red-orange-20: #FFD1BD;
+  --color-red-orange-10: #FFF2ED;
+
+  /* Orange */
+  --color-orange-100: #0A0700;
+  --color-orange-90: #3B2600;
+  --color-orange-80: #6C4500;
+  --color-orange-70: #9D6309;
+  --color-orange-60: #C97E19;
+  --color-orange-50: #F29D31;
+  --color-orange-40: #FFB650;
+  --color-orange-30: #FFCD78;
+  --color-orange-20: #FFE3B0;
+  --color-orange-10: #FFF8EB;
+
+  /* Yellow */
+  --color-yellow-100: #332200;
+  --color-yellow-90: #333100;
+  --color-yellow-80: #5C5500;
+  --color-yellow-70: #857600;
+  --color-yellow-60: #A88F00;
+  --color-yellow-50: #D6AD00;
+  --color-yellow-40: #F1C40F;
+  --color-yellow-30: #FFE44E;
+  --color-yellow-20: #FFF89C;
+  --color-yellow-10: #FFFFEB;
+
+  /* Yellow-green */
+  --color-yellow-green-100: #131300;
+  --color-yellow-green-90: #343500;
+  --color-yellow-green-80: #525400;
+  --color-yellow-green-70: #6D6F00;
+  --color-yellow-green-60: #858707;
+  --color-yellow-green-50: #ABAE1F;
+  --color-yellow-green-40: #CACD46;
+  --color-yellow-green-30: #E2E575;
+  --color-yellow-green-20: #F3F5B0;
+  --color-yellow-green-10: #FDFEEB;
+
+  /* Green */
+  --color-green-100: #030A08;
+  --color-green-90: #0E2E26;
+  --color-green-80: #1B5143;
+  --color-green-70: #2B715F;
+  --color-green-60: #3D8F79;
+  --color-green-50: #51AB93;
+  --color-green-40: #67C5AC;
+  --color-green-30: #8CE1CA;
+  --color-green-20: #B9F4E4;
+  --color-green-10: #F0FEFA;
+}

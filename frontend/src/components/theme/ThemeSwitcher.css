@@ -1,0 +1,18 @@
+/**
+ * Panel-scoped rebind of shadcn tokens back to raw palette sources.
+ * The theme switcher applies runtime overrides on :root, so without this
+ * scope, changing --primary or --background globally would also restyle
+ * this control surface. Scoping these CSS variables on the panel makes
+ * tokens resolve to palette values (which users cannot override) within
+ * this subtree only — the rest of the app still sees the user overrides.
+ */
+.theme-switcher-panel {
+	--background: var(--color-bg-default);
+	--foreground: var(--text-color-default);
+	--border: var(--color-border-default);
+	--muted: var(--color-background1-grey);
+	--muted-foreground: var(--color-tertiary-grey);
+	--primary: var(--color-primary-blue);
+	--primary-foreground: var(--text-color-default-2);
+	--ring: var(--color-tertiary-blue);
+}

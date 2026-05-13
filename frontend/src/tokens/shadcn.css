@@ -1,0 +1,255 @@
+/**
+ * shadcn/ui-compatible tokens mapped from Octuple DS Theme 2.
+ * Import after colors.css, semantic-colors.css, and typography.css.
+ * Provides: --background, --foreground, --primary, etc. and Tailwind v4 @theme names (--color-*).
+ */
+
+:root {
+  /* ─── Color (shadcn names) ───────────────────────────────────────────────── */
+  --background: var(--color-bg-default);
+  --foreground: var(--text-color-default);
+
+  --card: var(--color-bg-default);
+  --card-foreground: var(--text-color-default);
+
+  --popover: var(--color-bg-default);
+  --popover-foreground: var(--text-color-default);
+
+  --primary: var(--color-primary-blue);
+  --primary-foreground: var(--text-color-default-2);
+
+  --secondary: rgba(246, 247, 248, 1);
+  --secondary-foreground: var(--text-color-default);
+
+  --muted: var(--color-background1-grey);
+  --muted-foreground: var(--color-tertiary-grey);
+
+  --accent: var(--color-background2-blue);
+  --accent-foreground: var(--text-color-default);
+
+  --destructive: var(--color-primary-red);
+  --destructive-foreground: var(--text-color-default-2);
+
+  --success: var(--color-primary-green);
+  --success-foreground: var(--text-color-default-2);
+
+  --warning: var(--color-primary-orange);
+  --warning-foreground: var(--text-color-default-2);
+
+  --info: var(--color-primary-blue);
+  --info-foreground: var(--text-color-default-2);
+
+  --surface: var(--color-bg-default);
+  --surface-foreground: var(--text-color-default);
+
+  /* Chart palette — derived from primary/success/warning/destructive/info/accent
+   * so chart series automatically follow theme overrides. */
+  --chart-1: var(--primary);
+  --chart-2: var(--success);
+  --chart-3: var(--warning);
+  --chart-4: var(--destructive);
+  --chart-5: var(--info);
+  --chart-6: var(--accent);
+
+  /* Navbar theming (runtime-overridable) */
+  --navbar-bg: rgba(255, 255, 255, 0.92);
+  --navbar-fg: var(--color-secondary-grey);
+  --navbar-fg-hover: var(--color-tertiary-grey);
+  --navbar-bg-hover: var(--color-bg1-grey);
+
+  --border: var(--color-border-default);
+  --input: var(--color-border-default);
+  --ring: var(--color-tertiary-blue);
+
+  /* Sidebar (optional) */
+  --sidebar: var(--color-background1-grey);
+  --sidebar-foreground: var(--text-color-default);
+  --sidebar-border: var(--color-background2-grey);
+  --sidebar-primary: var(--color-primary-blue);
+  --sidebar-primary-foreground: var(--text-color-default-2);
+  --sidebar-accent: var(--color-background2-grey);
+  --sidebar-accent-foreground: var(--text-color-default);
+
+  /* Tailwind v4 @theme compatibility (--color-* used by utilities) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-navbar-bg: var(--navbar-bg);
+  --color-navbar-fg: var(--navbar-fg);
+  --color-navbar-fg-hover: var(--navbar-fg-hover);
+  --color-navbar-bg-hover: var(--navbar-bg-hover);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+
+  /* ─── ef-design-system rebind ─────────────────────────────────────────────
+   * Redirect the Octuple palette-level component tokens at the shadcn layer
+   * so runtime overrides of --primary / --destructive / --muted cascade into
+   * design-system components (Button, Badge, etc.) — not just Tailwind
+   * utilities. Imported after semantic-colors.css, so these win.
+   * ------------------------------------------------------------------------ */
+  --color-button-primary-bg: var(--primary);
+  --color-button-primary-bg-hover: var(--primary);
+  --color-button-primary-bg-pressed: var(--primary);
+  --color-button-primary-text: var(--primary-foreground);
+  --color-button-secondary-bg: var(--muted);
+  --color-button-secondary-bg-hover: var(--muted);
+  --color-button-secondary-bg-pressed: var(--muted);
+
+  /* ─── Typography (shadcn / Tailwind convention) ─────────────────────────── */
+  --font-sans: var(--font-family);
+  --font-heading: var(--font-family);
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+
+  /* ─── Radius (Octuple tokens: Figma node 11686:120880) ────────────────── */
+  --radius-sm: var(--radius-1);
+  --radius-md: var(--radius-3);
+  --radius-lg: var(--radius-5);
+  --radius-xl: var(--radius-6);
+  --radius-2xl: var(--radius-7);
+}
+
+/**
+ * Dark mode: extrapolated from Octuple palette (no dark theme in Figma).
+ * Apply class="dark" to html or a parent to use. Uses same palette (grey-90 for surfaces, grey-10 for text, etc.).
+ */
+.dark {
+  --background: var(--color-grey-90);
+  --foreground: var(--color-grey-10);
+
+  --card: var(--color-grey-90);
+  --card-foreground: var(--color-grey-10);
+
+  --popover: var(--color-grey-90);
+  --popover-foreground: var(--color-grey-10);
+
+  --primary: var(--color-blue-60);
+  --primary-foreground: var(--color-grey-0);
+
+  --secondary: var(--color-grey-80);
+  --secondary-foreground: var(--color-grey-10);
+
+  --muted: var(--color-grey-80);
+  --muted-foreground: var(--color-grey-40);
+
+  --accent: var(--color-blue-30);
+  --accent-foreground: var(--color-grey-90);
+
+  --destructive: var(--color-red-60);
+  --destructive-foreground: var(--color-grey-0);
+
+  --success: var(--color-green-60);
+  --success-foreground: var(--color-grey-0);
+
+  --warning: var(--color-orange-60);
+  --warning-foreground: var(--color-grey-0);
+
+  --info: var(--color-blue-60);
+  --info-foreground: var(--color-grey-0);
+
+  --surface: var(--color-grey-90);
+  --surface-foreground: var(--color-grey-10);
+
+  --chart-1: var(--primary);
+  --chart-2: var(--success);
+  --chart-3: var(--warning);
+  --chart-4: var(--destructive);
+  --chart-5: var(--info);
+  --chart-6: var(--accent);
+
+  --navbar-bg: rgba(20, 24, 33, 0.92);
+  --navbar-fg: var(--color-grey-30);
+  --navbar-fg-hover: var(--color-grey-10);
+  --navbar-bg-hover: var(--color-grey-80);
+
+  --border: var(--color-grey-70);
+  --input: var(--color-grey-70);
+  --ring: var(--color-blue-50);
+
+  --sidebar: var(--color-grey-90);
+  --sidebar-foreground: var(--color-grey-10);
+  --sidebar-border: var(--color-grey-70);
+  --sidebar-primary: var(--color-blue-60);
+  --sidebar-primary-foreground: var(--color-grey-0);
+  --sidebar-accent: var(--color-grey-80);
+  --sidebar-accent-foreground: var(--color-grey-10);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-navbar-bg: var(--navbar-bg);
+  --color-navbar-fg: var(--navbar-fg);
+  --color-navbar-fg-hover: var(--navbar-fg-hover);
+  --color-navbar-bg-hover: var(--navbar-bg-hover);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+}

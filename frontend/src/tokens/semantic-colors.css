@@ -1,0 +1,141 @@
+/**
+ * Octuple DS Theme 2 - Semantic color tokens
+ * Figma (node 25849:127027): https://www.figma.com/design/SlKRC7oKF7XZyHMv2op4ch/Octuple-DS--Theme-2-?m=auto&node-id=25849-127027
+ * These map semantic names to the palette (colors.css). Use these in components.
+ */
+:root {
+  /* Base (Light Theme) */
+  --background-color-white: var(--color-grey-0);
+  --text-color-default: var(--color-grey-90);
+  --text-color-default-2: var(--color-grey-0);
+  /* Aliases used by Navbar/Input (bg-default, bg1/bg2-grey) */
+  --color-bg-default: var(--color-grey-0);
+  --color-bg1-grey: var(--color-grey-10);
+  --color-bg2-grey: var(--color-grey-20);
+  --color-bg2-blue-green: var(--color-blue-green-20);
+  /* Avatar initials (semantic red on white) */
+  --color-avatar-initials-bg: var(--color-red-70);
+  --color-avatar-initials-text: var(--color-grey-0);
+  /* Grey - borders, surfaces, text */
+  --color-primary-grey: var(--color-grey-80);
+  --color-secondary-grey: var(--color-grey-70);
+  --color-tertiary-grey: var(--color-grey-60);
+  --color-background1-grey: var(--color-grey-10);
+  --color-background2-grey: var(--color-grey-20);
+  --color-background3-grey: var(--color-grey-30);
+
+  /* Blue */
+  --color-primary-blue: var(--color-blue-80);
+  --color-secondary-blue: var(--color-blue-70);
+  --color-tertiary-blue: var(--color-blue-60);
+  --color-background1-blue: var(--color-blue-10);
+  --color-background2-blue: var(--color-blue-20);
+  --color-background3-blue: var(--color-blue-30);
+
+  /* Blue-green */
+  --color-primary-blue-green: var(--color-blue-green-80);
+  --color-secondary-blue-green: var(--color-blue-green-70);
+  --color-tertiary-blue-green: var(--color-blue-green-60);
+  --color-background1-blue-green: var(--color-blue-green-10);
+  --color-background2-blue-green: var(--color-blue-green-20);
+  --color-background3-blue-green: var(--color-blue-green-30);
+
+  /* Blue-violet */
+  --color-primary-blue-violet: var(--color-blue-violet-80);
+  --color-secondary-blue-violet: var(--color-blue-violet-70);
+  --color-tertiary-blue-violet: var(--color-blue-violet-60);
+  --color-background1-blue-violet: var(--color-blue-violet-10);
+  --color-background2-blue-violet: var(--color-blue-violet-20);
+  --color-background3-blue-violet: var(--color-blue-violet-30);
+
+  /* Violet */
+  --color-primary-violet: var(--color-violet-80);
+  --color-secondary-violet: var(--color-violet-70);
+  --color-tertiary-violet: var(--color-violet-60);
+  --color-background1-violet: var(--color-violet-10);
+  --color-background2-violet: var(--color-violet-20);
+  --color-background3-violet: var(--color-violet-30);
+
+  /* Violet-red */
+  --color-primary-violet-red: var(--color-violet-red-80);
+  --color-secondary-violet-red: var(--color-violet-red-70);
+  --color-tertiary-violet-red: var(--color-violet-red-60);
+  --color-background1-violet-red: var(--color-violet-red-10);
+  --color-background2-violet-red: var(--color-violet-red-20);
+  --color-background3-violet-red: var(--color-violet-red-30);
+
+  /* Red */
+  --color-primary-red: var(--color-red-70);
+  --color-secondary-red: var(--color-red-70);
+  --color-tertiary-red: var(--color-red-60);
+  --color-background1-red: var(--color-red-10);
+  --color-background2-red: var(--color-red-20);
+  --color-background3-red: var(--color-red-30);
+
+  /* Red-orange */
+  --color-primary-red-orange: var(--color-red-orange-80);
+  --color-secondary-red-orange: var(--color-red-orange-70);
+  --color-tertiary-red-orange: var(--color-red-orange-60);
+  --color-background1-red-orange: var(--color-red-orange-10);
+  --color-background2-red-orange: var(--color-red-orange-20);
+  --color-background3-red-orange: var(--color-red-orange-30);
+
+  /* Orange */
+  --color-primary-orange: var(--color-orange-80);
+  --color-secondary-orange: var(--color-orange-60);
+  --color-tertiary-orange: var(--color-orange-50);
+  --color-background1-orange: var(--color-orange-10);
+  --color-background2-orange: var(--color-orange-20);
+  --color-background3-orange: var(--color-orange-30);
+
+  /* Yellow */
+  --color-primary-yellow: var(--color-yellow-80);
+  --color-secondary-yellow: var(--color-yellow-50);
+  --color-tertiary-yellow: var(--color-yellow-40);
+  --color-background1-yellow: var(--color-yellow-10);
+  --color-background2-yellow: var(--color-yellow-20);
+  --color-background3-yellow: var(--color-yellow-30);
+
+  /* Yellow-green */
+  --color-primary-yellow-green: var(--color-yellow-green-80);
+  --color-secondary-yellow-green: var(--color-yellow-green-50);
+  --color-tertiary-yellow-green: var(--color-yellow-green-40);
+  --color-background1-yellow-green: var(--color-yellow-green-10);
+  --color-background2-yellow-green: var(--color-yellow-green-20);
+  --color-background3-yellow-green: var(--color-yellow-green-30);
+
+  /* Green */
+  --color-primary-green: var(--color-green-80);
+  --color-secondary-green: var(--color-green-70);
+  --color-tertiary-green: var(--color-green-60);
+  --color-background1-green: var(--color-green-10);
+  --color-background2-green: var(--color-green-20);
+  --color-background3-green: var(--color-green-30);
+
+  /* ─── UI (canonical) – borders, inputs, button surfaces ──────────────────── */
+  --color-border-default: rgba(217, 220, 225, 1);
+  --color-input-ink: rgba(105, 113, 127, 1);
+  /* Button primary */
+  /* Stepper horizontal connector (between steps); Octuple progress blue */
+  --stepper-connector-active: rgba(44, 140, 201, 1);
+
+  --color-button-primary-bg: rgba(176, 243, 254, 1);
+  --color-button-primary-bg-hover: rgba(235, 253, 255, 1);
+  --color-button-primary-bg-pressed: rgba(142, 232, 248, 1);
+  --color-button-primary-bg-disabled: rgba(176, 243, 254, 1);
+  --color-button-primary-text: rgba(5, 77, 123, 1);
+  /* Button secondary – filled grey (distinct from outline: no border, visible fill) */
+  --color-button-secondary-bg: rgba(246, 247, 248, 1);
+  --color-button-secondary-bg-hover: rgba(237, 238, 240, 1);
+  --color-button-secondary-bg-pressed: rgba(217, 220, 225, 1);
+  --color-button-secondary-bg-disabled: rgba(246, 247, 248, 1);
+  --color-button-secondary-text-disabled: rgba(52, 60, 76, 1);
+  /* Button outline */
+  --color-button-outline-border: rgba(25, 153, 172, 1);
+  --color-button-outline-hover-bg: rgba(235, 253, 255, 1);
+
+  /* Career Hub Header — fixed toolbar height, width 100% of parent */
+  --header-career-hub-parent-height: 160px;
+  --header-career-hub-child-height: 116px;
+  --header-career-hub-profile-height: 408px;
+}

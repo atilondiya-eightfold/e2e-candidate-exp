@@ -1,0 +1,30 @@
+{
+    "home": {
+        "greeting": "¡Hola, Mundo!",
+        "signOut": "Cerrar sesión",
+        "translate": "traducir"
+    },
+    "login": {
+        "title": "Iniciar sesión",
+        "description": "Ingrese sus credenciales para acceder a su cuenta",
+        "emailLabel": "Correo electrónico",
+        "emailPlaceholder": "nombre@ejemplo.com",
+        "passwordLabel": "Contraseña",
+        "passwordPlaceholder": "Ingrese su contraseña",
+        "submit": "Iniciar sesión",
+        "submitting": "Iniciando sesión...",
+        "errorInvalidEmail": "Ingrese una dirección de correo electrónico válida",
+        "errorPasswordRequired": "La contraseña es obligatoria",
+        "errorUnexpected": "Ocurrió un error inesperado"
+    },
+    "unauthorized": {
+        "title": "Acceso denegado",
+        "description": "No tiene permiso para acceder a esta página. Contacte a su administrador si cree que esto es un error.",
+        "backToHome": "Volver al inicio"
+    },
+    "notFound": {
+        "title": "Página no encontrada",
+        "description": "La página que busca no existe o ha sido movida.",
+        "backToHome": "Volver al inicio"
+    }
+}

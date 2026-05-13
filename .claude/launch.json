@@ -1,0 +1,81 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "frontend-dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "source ~/.nvm/nvm.sh && nvm use 22 && cd frontend && pnpm run dev --port ${PORT:-5173}"
+      ],
+      "port": 5173,
+      "autoPort": false
+    },
+    {
+      "name": "prototype-server",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "source ~/.nvm/nvm.sh && nvm use && npx serve ./designs/screens -p 3456 --no-clipboard"
+      ],
+      "port": 3456
+    },
+    {
+      "name": "screens-server",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "cd /Users/atilondiya/Desktop/repos/talent-forge && source ~/.nvm/nvm.sh && nvm use 22 && npx serve ./screens -p 3457 --no-clipboard"
+      ],
+      "port": 3457
+    },
+    {
+      "name": "boilerplate-frontend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "source ~/.nvm/nvm.sh && nvm use 22 && corepack enable && cd boilerplate/frontend && pnpm run dev --port 5174"
+      ],
+      "port": 5174
+    },
+    {
+      "name": "frontend-worktree-sorting",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "source ~/.nvm/nvm.sh && nvm use 22 && cd .worktrees/spark-hris/feature-sorting-emp-directory/frontend && pnpm run dev --port 5175 --host 127.0.0.1"
+      ],
+      "port": 5175,
+      "autoPort": false
+    },
+    {
+      "name": "downloads-prototype",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "source ~/.nvm/nvm.sh && nvm use 22 && npx serve \"$HOME/Downloads\" -p 3458 --no-clipboard"
+      ],
+      "port": 3458
+    },
+    {
+      "name": "frontend-ui-cherry",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "source ~/.nvm/nvm.sh && nvm use 22 && cd /Users/atilondiya/Desktop/repos/talent-forge-ui-cherry/frontend && pnpm run dev --port 5180 --host 127.0.0.1"
+      ],
+      "port": 5180,
+      "autoPort": false
+    },
+    {
+      "name": "backend-dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "cd backend && uv run fastapi run --reload --port ${PORT:-8001} app/main.py"
+      ],
+      "port": 8001,
+      "autoPort": true
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+/**
+ * Octuple DS Theme 2 - Corner radius tokens
+ * Figma (node 11686:120880): https://www.figma.com/design/SlKRC7oKF7XZyHMv2op4ch/Octuple-DS--Theme-2-?m=auto&node-id=11686-120880
+ * Use --radius-* for border-radius. --radius-full for pills/circles.
+ */
+:root {
+  --radius-0: 0;
+  --radius-1: 4px;
+  --radius-2: 6px;
+  --radius-3: 8px;
+  --radius-4: 10px;
+  --radius-5: 12px;
+  --radius-6: 16px;
+  --radius-7: 20px;
+  --radius-8: 24px;
+  --radius-9: 40px;
+  --radius-full: 9999px;
+}

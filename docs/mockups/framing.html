@@ -1,0 +1,71 @@
+<h2>Which framing should this app lean into?</h2>
+<p class="subtitle">Pick the primary value-prop the candidate sees when they click the button on PCS. Different framings make different features feel central.</p>
+
+<div class="cards">
+  <div class="card" data-choice="mission-control" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f1f3a;color:#fff;padding:16px;font-family:-apple-system,sans-serif">
+      <div style="font-size:11px;opacity:.7;letter-spacing:.08em">YOUR JOURNEY · GOOGLE · STAFF SWE</div>
+      <div style="font-size:18px;font-weight:600;margin:6px 0 12px">Technical screen — Mon Apr 13</div>
+      <div style="background:#1f3358;padding:10px;border-radius:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:#7aa7ff">NEXT ACTION</div>
+        <div style="font-size:13px;margin-top:4px">Practice mock #2 — 18 min · Adaptive</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <div style="flex:1;background:#1f3358;padding:8px;border-radius:6px;font-size:11px">Gap report<br/><span style="opacity:.6">3 weak areas</span></div>
+        <div style="flex:1;background:#1f3358;padding:8px;border-radius:6px;font-size:11px">Mock score<br/><span style="opacity:.6">62/100</span></div>
+        <div style="flex:1;background:#1f3358;padding:8px;border-radius:6px;font-size:11px">Study plan<br/><span style="opacity:.6">4h left</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · Mission Control</h3>
+      <p><b>Dashboard-first.</b> Candidate lands on a single screen with their hiring-stage timeline, next action, and tiles for gap report / latest mock score / study-plan progress. Meta's status page → richer, but still a hub the candidate returns to between sessions.</p>
+      <p style="font-size:12px;color:#888"><b>Best when:</b> we expect repeat visits across days, and progress tracking is the hook.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="guided-prep" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fff;padding:16px;font-family:-apple-system,sans-serif;border-bottom:1px solid #e5e7eb">
+      <div style="display:flex;gap:6px;margin-bottom:14px">
+        <div style="flex:1;height:4px;background:#1f3a68;border-radius:2px"></div>
+        <div style="flex:1;height:4px;background:#1f3a68;border-radius:2px"></div>
+        <div style="flex:1;height:4px;background:#1f3a68;border-radius:2px"></div>
+        <div style="flex:1;height:4px;background:#e5e7eb;border-radius:2px"></div>
+        <div style="flex:1;height:4px;background:#e5e7eb;border-radius:2px"></div>
+      </div>
+      <div style="font-size:11px;color:#1f3a68;font-weight:600;letter-spacing:.06em">STEP 3 OF 5 · MOCK INTERVIEW</div>
+      <div style="font-size:18px;font-weight:600;margin:6px 0 12px;color:#111">Ready when you are — 25 min mock</div>
+      <div style="background:#f3f4f6;padding:10px;border-radius:8px;font-size:12px;color:#374151;margin-bottom:10px">Based on your gap report we'll focus on <b>scaling tradeoffs</b> and <b>consistency</b>. Use a quiet space — voice only.</div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;background:#1f3a68;color:#fff;padding:10px;border-radius:8px;text-align:center;font-size:13px;font-weight:600">Start mock</div>
+        <div style="flex:1;background:#fff;color:#1f3a68;border:1px solid #1f3a68;padding:10px;border-radius:8px;text-align:center;font-size:13px;font-weight:600">Skip for now</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · Guided Prep Flow</h3>
+      <p><b>Opinionated wizard.</b> One linear path: intro → gap report → mock interview → live feedback → study plan → "back to PCS." Each step has one CTA. No menus, no choices to defer the work.</p>
+      <p style="font-size:12px;color:#888"><b>Best when:</b> we want most candidates to complete one full loop in a single session, like a guided onboarding.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="coach-chat" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#faf9f6;padding:16px;font-family:-apple-system,sans-serif">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6)"></div>
+        <div style="font-size:13px;font-weight:600">Mira · your interview coach</div>
+      </div>
+      <div style="background:#fff;padding:10px;border-radius:12px;border-bottom-left-radius:4px;font-size:12px;margin-bottom:6px;max-width:80%">Hi Aarav — I looked at the Google Staff SWE role you applied for. Your weakest signal is <b>consistency tradeoffs</b>. Want to do a 25-min mock right now, or shall I walk you through the gap first?</div>
+      <div style="display:flex;gap:6px;justify-content:flex-end;margin:8px 0">
+        <div style="background:#1f3a68;color:#fff;padding:6px 12px;border-radius:16px;font-size:11px">Start mock</div>
+        <div style="background:#fff;color:#1f3a68;border:1px solid #1f3a68;padding:6px 12px;border-radius:16px;font-size:11px">Show me gaps first</div>
+      </div>
+      <div style="background:#fff;padding:8px 10px;border-radius:18px;border:1px solid #e5e7eb;font-size:11px;color:#9ca3af;margin-top:6px">Type or tap mic to talk to Mira…</div>
+    </div>
+    <div class="card-body">
+      <h3>C · Coach Chat</h3>
+      <p><b>Conversation-first.</b> An AI coach drives the interaction. Mock interview, gap explanations, study-plan items all surface as chat actions. Feels like texting a senior eng who's prepping you.</p>
+      <p style="font-size:12px;color:#888"><b>Best when:</b> we want the "wow" factor and the agent voice itself to be the differentiator.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px;font-size:13px"><b>My recommendation: B (Guided Prep Flow)</b> — it gets the highest fraction of candidates through one full loop (gap → mock → study plan), which is where the differentiation lives. A is great for retention but assumes the candidate comes back; C is the most novel but bets the experience on voice quality. We can borrow elements: B's flow with A's "home base" entry card, or B's flow with a small Mira-style intro screen.</p>

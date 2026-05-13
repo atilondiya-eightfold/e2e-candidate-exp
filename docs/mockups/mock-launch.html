@@ -1,0 +1,84 @@
+<h2>Mock launch card — replaces the live screen</h2>
+<p class="subtitle">Closest analog is Meta's "Join meeting" card. Our launch card has a few extras because the meeting is with our agent, not a human.</p>
+
+<div class="mockup">
+<div class="mockup-header">Launch card · Mock #2 ready to start</div>
+<div class="mockup-body">
+<div style="font-family:-apple-system,sans-serif;background:#f5f6f8;padding:20px;min-height:520px">
+
+  <!-- breadcrumb -->
+  <div style="font-size:11px;color:#6b7280;margin-bottom:10px"><span style="color:#1f3a68">← Hub</span> · Adaptive mock · #2</div>
+
+  <!-- header -->
+  <div style="font-size:21px;font-weight:700;color:#111">Mock #2 — Consistency &amp; failure modes</div>
+  <div style="font-size:12.5px;color:#6b7280;margin:4px 0 16px">Voice only · 25 min · adapts as you talk</div>
+
+  <!-- main card -->
+  <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:18px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:start;gap:16px">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:6px">Meeting with Mira (Eightfold AI Coach)</div>
+        <div style="font-size:11.5px;color:#6b7280;line-height:1.55">
+          Meeting ID: <b style="color:#111">91752070224</b><br/>
+          Passcode: <b style="color:#111">657517</b><br/>
+          Hosted on: <b style="color:#111">LiveKit</b> · opens in a new tab
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:end">
+        <div style="background:#1f3a68;color:#fff;padding:11px 22px;border-radius:24px;font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:6px">📹 Join meeting</div>
+        <div style="background:#fff;color:#1f3a68;border:1px solid #1f3a68;padding:8px 14px;border-radius:20px;font-size:11.5px;font-weight:600">🎤 Test mic first</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- pre-flight tips -->
+  <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:16px;margin-bottom:14px">
+    <div style="font-size:10.5px;color:#1f3a68;font-weight:700;letter-spacing:.06em;margin-bottom:10px">BEFORE YOU JOIN</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11.5px;color:#374151;line-height:1.5">
+      <div>🎧 Use headphones — the agent can hear your speaker echo otherwise.</div>
+      <div>🤫 Find a quiet room — background voices confuse the agent.</div>
+      <div>⏱️ Plan for ~25 min uninterrupted — pausing mid-call ends the mock.</div>
+      <div>🧠 Think out loud — the agent only scores what you actually say.</div>
+    </div>
+  </div>
+
+  <!-- what you'll be asked -->
+  <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:16px">
+    <div style="font-size:10.5px;color:#1f3a68;font-weight:700;letter-spacing:.06em;margin-bottom:10px">WHAT YOU'LL BE ASKED</div>
+    <div style="font-size:11.5px;color:#374151;line-height:1.55;margin-bottom:10px">
+      Mira will start with a system-design prompt, then dig deeper based on your answers. Focus topics for this mock (from your gap report):
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div style="background:#eef2ff;color:#1f3a68;padding:5px 10px;border-radius:14px;font-size:11px;font-weight:600">Consistency / CAP</div>
+      <div style="background:#eef2ff;color:#1f3a68;padding:5px 10px;border-radius:14px;font-size:11px;font-weight:600">Failure modes</div>
+      <div style="background:#f3f4f6;color:#6b7280;padding:5px 10px;border-radius:14px;font-size:11px">Scaling tradeoffs (review)</div>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<h3 style="margin-top:24px">What changes vs. before</h3>
+<div class="pros-cons">
+  <div class="pros">
+    <h4>Wins</h4>
+    <ul>
+      <li>No live UI to build — drop the mic visualizer, transcript pane, tree viz</li>
+      <li>Agent can be hosted on any meeting backend the candidate's browser already supports</li>
+      <li>Pre-flight tips give us a place to set expectations (headphones, think aloud) — sets up better scoring</li>
+      <li>The launch card is reusable for every mock attempt; only the meta changes</li>
+    </ul>
+  </div>
+  <div class="cons">
+    <h4>Things to nail down</h4>
+    <ul>
+      <li>Where does the agent actually join? LiveKit room URL (re-uses Phase 0/1) vs. a real Google Meet link (means agent has to dial in as a SIP participant — much more work)</li>
+      <li>How do we know the candidate finished? Today's post-call hook fires on call-end; that's still fine, just plumb it to bring them back to this page</li>
+      <li>Mid-call abandonment — what state do we show on the hub if they joined but never came back?</li>
+      <li>No in-app captioning means hearing-impaired candidates depend on the meeting client's captions — acceptable for v1?</li>
+    </ul>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:18px;font-size:13px">If you confirm "still our adaptive agent, just rendered in the meeting client (LiveKit web playground or equivalent)" then everything Phase 0/1 designed still applies — we just don't render the room ourselves. If you're pivoting away from the AI mock entirely and want a real human-interview booking flow, that's a bigger redirect and I'd want to redo the framing.</p>

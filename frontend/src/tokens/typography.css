@@ -1,0 +1,85 @@
+/**
+ * Octuple DS Theme 2 - Typography Tokens
+ * Figma (node 47:3): https://www.figma.com/design/SlKRC7oKF7XZyHMv2op4ch/Octuple-DS--Theme-2-?m=auto&node-id=47-3
+ * Font: Gilroy. Values verified against Figma file via API (Typography frame).
+ * For letter-spacing on subtitle/header/display, use --typography-*-letter-spacing.
+ */
+
+:root {
+  --font-family: 'Gilroy', 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Semantic colors (primary, background2/3, etc.) come from semantic-colors.css (Figma node 25849:127027) */
+
+  /* Caption - 12px / 1.33 */
+  --typography-caption: 400 12px/1.33 var(--font-family);
+
+  /* Button3 - 14px / 1.14 */
+  --typography-button3: 600 14px/1.14 var(--font-family);
+
+  /* Button2 - 16px / 1.25 */
+  --typography-button2: 600 16px/1.25 var(--font-family);
+
+  /* Button1 - 18px / 1.33 */
+  --typography-button1: 600 18px/1.33 var(--font-family);
+
+  /* Body3 - 14px / 1.43 */
+  --typography-body3: 500 14px/1.43 var(--font-family);
+
+  /* Body2 - 16px / 1.5 */
+  --typography-body2: 500 16px/1.5 var(--font-family);
+
+  /* Body1 - 18px / 1.33 */
+  --typography-body1: 400 18px/1.33 var(--font-family);
+
+  /* Header6 - 14px / 1.43 */
+  --typography-header6: 600 14px/1.43 var(--font-family);
+
+  /* Header5 - 16px / 1.5 */
+  --typography-header5: 600 16px/1.5 var(--font-family);
+
+  /* Pre-display - 20px / 1.4 */
+  --typography-pre-display: 600 20px/1.4 var(--font-family);
+
+  /* Header4 - 20px / 1.4 */
+  --typography-header4: 600 20px/1.4 var(--font-family);
+
+  /* Subtitle2 - 24px / 1.33, -1% letter-spacing */
+  --typography-subtitle2: 600 24px/1.33 var(--font-family);
+  --typography-subtitle2-letter-spacing: -0.01em;
+
+  /* Header3 - 24px / 1.33 */
+  --typography-header3: 600 24px/1.33 var(--font-family);
+
+  /* Subtitle1 - 32px / 1.25, -1.5% letter-spacing */
+  --typography-subtitle1: 400 32px/1.25 var(--font-family);
+  --typography-subtitle1-letter-spacing: -0.015em;
+
+  /* Header2 - 32px / 1.25, -1% letter-spacing */
+  --typography-header2: 600 32px/1.25 var(--font-family);
+  --typography-header2-letter-spacing: -0.01em;
+
+  /* Header1 - 40px / 1.2, -2% letter-spacing */
+  --typography-header1: 600 40px/1.2 var(--font-family);
+  --typography-header1-letter-spacing: -0.02em;
+
+  /* Display4 - 56px / 1.14, -2% letter-spacing */
+  --typography-display4: 400 56px/1.14 var(--font-family);
+  --typography-display4-letter-spacing: -0.02em;
+
+  /* Display3 - 64px / 1.125, -2% letter-spacing */
+  --typography-display3: 400 64px/1.125 var(--font-family);
+  --typography-display3-letter-spacing: -0.02em;
+
+  /* Display2 - 80px / 1.2, -3% letter-spacing */
+  --typography-display2: 400 80px/1.2 var(--font-family);
+  --typography-display2-letter-spacing: -0.03em;
+
+  /* Display1 - 96px / 1.17, -3% letter-spacing */
+  --typography-display1: 400 96px/1.17 var(--font-family);
+  --typography-display1-letter-spacing: -0.03em;
+
+  /* Additional variants */
+  --typography-caption-semibold: 600 12px/1.33 var(--font-family);
+  --typography-caption-medium: 500 12px/1.33 var(--font-family);
+  --typography-header4-large: 600 28px/1.25 var(--font-family);
+}

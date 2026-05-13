@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: candidate-prep
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: PROJECT_NAME
+        value: candidate-prep
+      - key: SECRET_KEY
+        generateValue: true
+      - key: EF_API_BASE_URL
+        value: https://apiv2.eightfold.ai/api/v2
+      - key: EF_OAUTH_TOKEN_URL
+        value: https://apiv2.eightfold.ai/oauth/v1/authenticate
+      - key: EF_OAUTH_CLIENT_ID
+        sync: false
+      - key: EF_OAUTH_CLIENT_SECRET
+        sync: false
+      # --- DB is unused in this BFF POC; dummy values satisfy pydantic Settings ---
+      - key: POSTGRES_SERVER
+        value: localhost
+      - key: POSTGRES_USER
+        value: unused
+      - key: POSTGRES_PASSWORD
+        value: unused
+      - key: POSTGRES_DB
+        value: unused
+      - key: FIRST_SUPERUSER
+        value: unused@example.com
+      - key: FIRST_SUPERUSER_PASSWORD
+        value: unused-not-default
+      - key: BACKEND_CORS_ORIGINS
+        value: ""
+      - key: FRONTEND_HOST
+        value: https://candidate-prep-kvrp.onrender.com

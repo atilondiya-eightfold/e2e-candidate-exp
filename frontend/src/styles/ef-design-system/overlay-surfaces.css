@@ -1,0 +1,29 @@
+/**
+ * Canonical overlay/menu surface styles.
+ * Single source of truth for dropdowns, popovers, context menus, etc.
+ * Tokens only: --popover, --popover-foreground, --color-border-default.
+ *
+ * Uses @layer so this layer is ordered after Tailwind's utilities when
+ * design system styles are imported after Tailwind. Ensures overlay borders
+ * use the token instead of Tailwind v4's default (currentColor).
+ */
+@layer overlay-surfaces {
+  [data-slot="dropdown-menu-content"],
+  [data-slot="dropdown-menu-sub-content"],
+  [data-slot="context-menu-content"],
+  [data-slot="context-menu-sub-content"],
+  [data-slot="select-content"],
+  [data-slot="popover-content"],
+  [data-slot="menubar-content"],
+  [data-slot="menubar-sub-content"],
+  [data-slot="navigation-menu-viewport"],
+  [data-slot="combobox-content"],
+  [data-slot="command"],
+  [data-slot="hover-card-content"] {
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    border: 1px solid var(--color-border-default);
+    /* Failsafe: ensure token wins over Tailwind v4 default (currentColor) if layer order varies */
+    border-color: var(--color-border-default) !important;
+  }
+}

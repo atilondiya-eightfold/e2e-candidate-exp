@@ -1,0 +1,15 @@
+/**
+ * Eightfold Design System - Base Styles
+ * Tailwind v4 + tokens. Gilroy is loaded from /fonts/ (serve public/fonts at that path).
+ *
+ * Import this file after Tailwind in your app (e.g. @import 'tailwindcss'; @theme {...}; @import 'design-system/styles').
+ */
+@import 'tailwindcss';
+@import './gilroy.css';
+@import '../../tokens/colors.css';
+@import '../../tokens/semantic-colors.css';
+@import '../../tokens/typography.css';
+@import '../../tokens/spacing.css';
+@import '../../tokens/corner-radius.css';
+@import '../../tokens/shadcn.css';
+@import './overlay-surfaces.css';

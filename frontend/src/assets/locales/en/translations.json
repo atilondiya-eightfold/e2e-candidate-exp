@@ -1,0 +1,30 @@
+{
+    "home": {
+        "greeting": "Hello, world!",
+        "signOut": "Sign out",
+        "translate": "translate"
+    },
+    "login": {
+        "title": "Sign in",
+        "description": "Enter your credentials to access your account",
+        "emailLabel": "Email",
+        "emailPlaceholder": "name@example.com",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "submit": "Sign in",
+        "submitting": "Signing in...",
+        "errorInvalidEmail": "Please enter a valid email address",
+        "errorPasswordRequired": "Password is required",
+        "errorUnexpected": "An unexpected error occurred"
+    },
+    "unauthorized": {
+        "title": "Access Denied",
+        "description": "You don't have permission to access this page. Contact your administrator if you believe this is an error.",
+        "backToHome": "Back to Home"
+    },
+    "notFound": {
+        "title": "Page not found",
+        "description": "The page you're looking for doesn't exist or has been moved.",
+        "backToHome": "Back to Home"
+    }
+}
