@@ -47,6 +47,15 @@ export default defineConfig({
 				changeOrigin: true,
 				secure: true,
 			},
+			// Token mint endpoint — the browser calls /oauth/v1/authenticate
+			// directly to obtain a jwt_bearer access token (see client.ts).
+			"/oauth": {
+				target:
+					process.env["VITE_API_PROXY_TARGET"] ??
+					"https://rmeena.dev3.eightfold.ai",
+				changeOrigin: true,
+				secure: true,
+			},
 		},
 	},
 	test: {
