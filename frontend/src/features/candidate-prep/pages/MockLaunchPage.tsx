@@ -1,13 +1,38 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState, type ReactElement } from "react";
 
+import { useStartMockInterview } from "@/features/eightfold-api/hooks";
+
 import { ErrorPanel } from "../components/ErrorPanel";
 import { PillButton } from "../components/PillButton";
 import { TopNav } from "../components/TopNav";
-import { useApplication, useCreateMock } from "../hooks";
 import { focusChipsByMock, meetingDetails } from "../mocks/data";
 import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
+
+// Demo IDs for the rmeena.dev3.eightfold.ai tenant (validated end-to-end
+// in the backend PR). Move these to per-tenant config (or derive from the
+// application) before any rollout; for the hackathon they let the Join
+// button work without an applications API lookup.
+const DEMO_POSITION_ID = 30861877;
+const DEMO_PROFILE_ID = 380274702;
+const DEMO_FEEDBACK_FORM_TEMPLATE_ID = 1;
+
+/**
+ * Stash LiveKit credentials between the launch page (where they're minted)
+ * and the active call page (where the browser connects to the room). Keyed
+ * by mockInterviewId so concurrent attempts don't collide; sessionStorage
+ * auto-clears on tab close, and tokens expire after ~2h anyway.
+ */
+export const mockLivekitStorageKey = (mockId: string | number): string =>
+	`candidate-prep:mock:${String(mockId)}:livekit`;
+
+export interface MockLivekitStashed {
+	serverUrl: string;
+	token: string;
+	roomName: string;
+	agentName: string;
+}
 
 interface Props {
 	applicationId: string;
@@ -18,49 +43,50 @@ export function MockLaunchPage({ applicationId }: Props): ReactElement {
 	const demoState = usePrepDemoStore((s) => s.state);
 	const [showMicTest, setShowMicTest] = useState(false);
 	const [connectError, setConnectError] = useState(false);
+	const start = useStartMockInterview();
 	const s = strings.mockLaunch;
-
-	const appQ = useApplication(
-		demoState === "populated" ? applicationId : undefined,
-	);
-	const createMock = useCreateMock();
-
-	// Focus chips come from the gap-analysis pickdown when the API is live;
-	// fall back to the fixture when offline.
 	const focus = focusChipsByMock["mock_2"];
 
 	const backToHub = () =>
 		navigate({ to: "/prep/$applicationId", params: { applicationId } });
-	const join = () => {
+
+	const join = async () => {
+		// Honour the demo toolbar's "error" state for the offline mockup story.
 		if (demoState === "error") {
 			setConnectError(true);
 			return;
 		}
-		// If we have a real application id from the API, create the mock then
-		// transition; otherwise fall back to the fixture mock id.
-		if (appQ.data?.application_id) {
-			createMock.mutate(
-				{ applicationId: appQ.data.application_id },
-				{
-					onSuccess: (mock) => {
-						if (mock.meeting?.url) {
-							console.log("[candidate-prep] opening meeting", mock.meeting.url);
-						}
-						navigate({
-							to: "/prep/$applicationId/mock/$mockId/active",
-							params: { applicationId, mockId: mock.mock_id },
-						});
-					},
-					onError: () => setConnectError(true),
-				},
+		setConnectError(false);
+		try {
+			const result = await start.mutateAsync({
+				positionId: DEMO_POSITION_ID,
+				feedbackFormTemplateId: DEMO_FEEDBACK_FORM_TEMPLATE_ID,
+				profileId: DEMO_PROFILE_ID,
+			});
+			// Hand the LiveKit creds off to MockActivePage via sessionStorage.
+			// The token is ~2KB so it can't ride on URL params.
+			const stash: MockLivekitStashed = {
+				serverUrl: result.serverUrl,
+				token: result.token,
+				roomName: result.roomName,
+				agentName: result.agentName,
+			};
+			sessionStorage.setItem(
+				mockLivekitStorageKey(result.interviewSessionId),
+				JSON.stringify(stash)
 			);
-			return;
+			navigate({
+				to: "/prep/$applicationId/mock/$mockId/active",
+				params: {
+					applicationId,
+					mockId: String(result.interviewSessionId),
+				},
+			});
+		} catch (err) {
+			// eslint-disable-next-line no-console
+			console.error("[candidate-prep] start mock failed", err);
+			setConnectError(true);
 		}
-		console.log("[candidate-prep] opening meeting", meetingDetails.url);
-		navigate({
-			to: "/prep/$applicationId/mock/$mockId/active",
-			params: { applicationId, mockId: "mock_2" },
-		});
 	};
 
 	return (
@@ -138,8 +164,14 @@ export function MockLaunchPage({ applicationId }: Props): ReactElement {
 							</div>
 						</div>
 						<div className="flex flex-col items-end gap-2">
-							<PillButton size="lg" onClick={join}>
-								{s.meeting.join}
+							<PillButton
+								size="lg"
+								disabled={start.isPending}
+								onClick={() => {
+									void join();
+								}}
+							>
+								{start.isPending ? "Connecting…" : s.meeting.join}
 							</PillButton>
 							<PillButton
 								size="sm"
@@ -197,7 +229,7 @@ export function MockLaunchPage({ applicationId }: Props): ReactElement {
 						onCancel={() => setShowMicTest(false)}
 						onJoin={() => {
 							setShowMicTest(false);
-							join();
+							void join();
 						}}
 					/>
 				)}

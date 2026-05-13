@@ -144,7 +144,10 @@ async def close_token_cache() -> None:
 
 def _origin_of(url: str) -> str:
     parsed = httpx.URL(url)
-    return f"{parsed.scheme}://{parsed.host}"
+    netloc = parsed.host
+    if parsed.port:
+        netloc = f"{parsed.host}:{parsed.port}"
+    return f"{parsed.scheme}://{netloc}"
 
 
 def _path_of(url: str) -> str:

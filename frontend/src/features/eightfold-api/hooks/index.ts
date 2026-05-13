@@ -3,6 +3,7 @@ export * from "./use-async-api-status";
 export * from "./use-ats-candidate";
 export * from "./use-ats-position";
 export * from "./use-booking";
+export * from "./use-candidate-prep";
 export * from "./use-career-navigator";
 export * from "./use-careerhub";
 export * from "./use-connectors";

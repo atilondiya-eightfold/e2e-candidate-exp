@@ -61,6 +61,12 @@ class Settings(BaseSettings):
     EF_OAUTH_CLIENT_ID: str = ""
     EF_OAUTH_CLIENT_SECRET: str = ""
     EF_OAUTH_TIMEOUT_S: float = 5.0
+    # Optional: when set, every proxied request rewrites its Host header to
+    # this value. Needed when EF_API_BASE_URL is a localhost address but the
+    # upstream must see a publicly-reachable host (e.g. the candidate-prep
+    # voice-mock endpoint embeds request.host into the LiveKit JWT's
+    # service_endpoints; localhost is unreachable from the agent worker).
+    EF_API_HOST_OVERRIDE: str = ""
 
     @model_validator(mode="after")
     def _enforce_oauth_creds(self) -> Self:
