@@ -33,28 +33,33 @@ export default defineConfig({
 	server: {
 		host: true,
 		strictPort: true,
-		// Direct-to-API-server. We hit the public Eightfold v2 api_server
-		// (App B) through its ALB, bypassing the BFF entirely. App B sees
-		// `Host: rmeena.dev3.eightfold.ai` because changeOrigin: true makes
-		// the proxy rewrite the Host header to match the target — so the
-		// LiveKit JWT's service_endpoints naturally embed the public
-		// hostname without any host-override hack.
+		// Proxy to App B (api_server_v2_service) on :8003. The public ALB
+		// at rmeena.dev3.eightfold.ai routes everything to :8000 (App A),
+		// so /api/v2/* + /oauth/v1/* — which live on App B — only resolve
+		// when we hit App B directly. Run Vite on the dev box (or tunnel
+		// :8003 over SSH and set VITE_API_PROXY_TARGET to the tunnel URL).
+		//
+		// App B reads EF_PUBLIC_HOST=rmeena.dev3.eightfold.ai at startup
+		// and uses it as the LiveKit JWT's embedded host so the agent's
+		// callback URLs are publicly reachable regardless of the proxy
+		// path. (App A on :8000 serves /api/voice_agent/* natively; the
+		// agent worker hits that via the public ALB, not through Vite.)
 		proxy: {
 			"/api": {
 				target:
 					process.env["VITE_API_PROXY_TARGET"] ??
-					"https://rmeena.dev3.eightfold.ai",
+					"http://localhost:8003",
 				changeOrigin: true,
-				secure: true,
+				secure: false,
 			},
-			// Token mint endpoint — the browser calls /oauth/v1/authenticate
-			// directly to obtain a jwt_bearer access token (see client.ts).
+			// Token mint endpoint — the browser POSTs /oauth/v1/authenticate
+			// to App B (see client.ts).
 			"/oauth": {
 				target:
 					process.env["VITE_API_PROXY_TARGET"] ??
-					"https://rmeena.dev3.eightfold.ai",
+					"http://localhost:8003",
 				changeOrigin: true,
-				secure: true,
+				secure: false,
 			},
 		},
 	},
