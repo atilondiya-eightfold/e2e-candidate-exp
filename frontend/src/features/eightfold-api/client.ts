@@ -24,9 +24,14 @@ function buildUrl(
 }
 
 function getAuthHeaders(): Record<string, string> {
-	// BFF-only mode — the backend proxy re-signs upstream auth server-side.
-	// The browser never participates in EF auth.
-	return {};
+	// Direct-to-API-server mode. The Vite dev server proxies /api/* straight
+	// to https://rmeena.dev3.eightfold.ai (no BFF), so the browser participates
+	// in Eightfold auth directly with the tenant's API key. The key value comes
+	// from VITE_EF_API_KEY at build time; for the hackathon demo it's the same
+	// rmeena.dev3 key used by curls/postman.
+	const apiKey =
+		import.meta.env.VITE_EF_API_KEY ?? "yhxgixomtiosurmwizgcvtesyyyatdus";
+	return apiKey ? { Authorization: `Basic ${apiKey}` } : {};
 }
 
 async function fetchApi<T>(

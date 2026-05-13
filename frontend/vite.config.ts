@@ -33,11 +33,19 @@ export default defineConfig({
 	server: {
 		host: true,
 		strictPort: true,
-		// Proxy API requests to the FastAPI backend during development.
+		// Direct-to-API-server. We hit the public Eightfold v2 api_server
+		// (App B) through its ALB, bypassing the BFF entirely. App B sees
+		// `Host: rmeena.dev3.eightfold.ai` because changeOrigin: true makes
+		// the proxy rewrite the Host header to match the target — so the
+		// LiveKit JWT's service_endpoints naturally embed the public
+		// hostname without any host-override hack.
 		proxy: {
 			"/api": {
-				target: process.env["VITE_API_PROXY_TARGET"] ?? "http://localhost:8000",
+				target:
+					process.env["VITE_API_PROXY_TARGET"] ??
+					"https://rmeena.dev3.eightfold.ai",
 				changeOrigin: true,
+				secure: true,
 			},
 		},
 	},
