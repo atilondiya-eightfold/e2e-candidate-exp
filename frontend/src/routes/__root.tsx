@@ -1,4 +1,4 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Outlet, createRootRoute, useRouterState } from "@tanstack/react-router";
 import { useEffect, type ReactElement, type ReactNode } from "react";
 
 import { AppShell } from "@/components/layout/AppShell";
@@ -33,12 +33,17 @@ function AuthGate({ children }: { children: ReactNode }): ReactElement {
 	return <>{children}</>;
 }
 
+// Routes that handle their own auth context (e.g. PCS deep-link to /prep/*).
+// AuthGate is skipped for these — the candidate-prep flow carries its own
+// session token from the parent application.
+const UNGATED_PREFIXES = ["/prep"];
+
 function RootLayout(): ReactElement {
+	const pathname = useRouterState({ select: (s) => s.location.pathname });
+	const ungated = UNGATED_PREFIXES.some((p) => pathname.startsWith(p));
 	return (
 		<AppShell>
-			<AuthGate>
-				<Outlet />
-			</AuthGate>
+			{ungated ? <Outlet /> : <AuthGate><Outlet /></AuthGate>}
 		</AppShell>
 	);
 }
