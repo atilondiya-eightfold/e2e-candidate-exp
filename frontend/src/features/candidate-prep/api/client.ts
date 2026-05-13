@@ -9,6 +9,13 @@ import { ApiError } from "@/features/eightfold-api/errors";
 import type { ApiEnvelope } from "./types";
 
 const BASE = "/api/v2/candidate_prep";
+const DEFAULT_TIMEOUT_MS = 5_000;
+
+function withTimeout(ms: number): { signal: AbortSignal; cancel: () => void } {
+	const ctrl = new AbortController();
+	const t = window.setTimeout(() => ctrl.abort(), ms);
+	return { signal: ctrl.signal, cancel: () => window.clearTimeout(t) };
+}
 
 async function unwrap<T>(response: Response): Promise<T> {
 	if (!response.ok) {
@@ -35,16 +42,27 @@ export async function cpGet<T>(
 		}
 	}
 	const url = qs.toString() ? `${BASE}${path}?${qs}` : `${BASE}${path}`;
-	const r = await fetch(url, { credentials: "include" });
-	return unwrap<T>(r);
+	const t = withTimeout(DEFAULT_TIMEOUT_MS);
+	try {
+		const r = await fetch(url, { credentials: "include", signal: t.signal });
+		return await unwrap<T>(r);
+	} finally {
+		t.cancel();
+	}
 }
 
 export async function cpPost<T>(path: string, body: unknown): Promise<T> {
-	const r = await fetch(`${BASE}${path}`, {
-		method: "POST",
-		credentials: "include",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(body),
-	});
-	return unwrap<T>(r);
+	const t = withTimeout(DEFAULT_TIMEOUT_MS);
+	try {
+		const r = await fetch(`${BASE}${path}`, {
+			method: "POST",
+			credentials: "include",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(body),
+			signal: t.signal,
+		});
+		return await unwrap<T>(r);
+	} finally {
+		t.cancel();
+	}
 }

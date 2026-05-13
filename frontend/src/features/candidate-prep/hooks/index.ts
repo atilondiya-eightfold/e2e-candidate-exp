@@ -26,6 +26,10 @@ import type {
 function noRetryOn404(failureCount: number, error: unknown): boolean {
 	const status = (error as { status?: number }).status;
 	if (status === 404 || status === 401 || status === 403) return false;
+	// Network failures (timeout, aborted, ECONNREFUSED) surface as Error
+	// without a numeric `.status` — fail fast so the UI can fall back to
+	// the fixture without a 15s retry cascade.
+	if (status === undefined) return false;
 	return failureCount < 3;
 }
 

@@ -2,11 +2,16 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, type ReactElement } from "react";
 
 import { ApplicationTimeline } from "../components/ApplicationTimeline";
+import { ErrorPanel } from "../components/ErrorPanel";
 import { PillButton } from "../components/PillButton";
 import { PrepFooter } from "../components/PrepFooter";
 import { TopNav } from "../components/TopNav";
-import { populatedState, type GapDimension, type MockSummary } from "../mocks/data";
+import { usePrepData } from "../hooks/use-prep-state";
+import type { GapDimension, MockSummary } from "../mocks/data";
+import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
+
+import { EmptyStatePage } from "./EmptyStatePage";
 
 interface Props {
 	applicationId: string;
@@ -15,8 +20,54 @@ interface Props {
 export function HubPage({ applicationId }: Props): ReactElement {
 	const navigate = useNavigate();
 	const [aboutOpen, setAboutOpen] = useState(true);
-	const { application, gap, mocks, studyPlan, readinessPct } = populatedState;
+	const prep = usePrepData(applicationId);
 	const s = strings.hub;
+
+	if (prep.state === "empty") {
+		return <EmptyStatePage applicationId={applicationId} />;
+	}
+	if (prep.state === "loading") {
+		return (
+			<div className="bg-white">
+				<TopNav applicationId={applicationId} />
+				<div className="mx-auto max-w-4xl px-4 py-16 text-center text-[13px] text-[#65676b]">
+					Loading your prep dashboard…
+				</div>
+			</div>
+		);
+	}
+	if (prep.state === "error" || !prep.data) {
+		return (
+			<div className="bg-white">
+				<TopNav applicationId={applicationId} />
+				<div className="mx-auto max-w-3xl px-4 py-10">
+					<ErrorPanel
+						tone="red"
+						icon="✦"
+						title={strings.errors.genericTitle}
+						body={strings.errors.genericBody}
+						actions={[
+							{
+								label: strings.errors.retryNow,
+								onClick: () =>
+									usePrepDemoStore.getState().setState("populated"),
+								variant: "primary",
+							},
+							{
+								label: strings.errors.refresh,
+								onClick: () => window.location.reload(),
+								variant: "secondary",
+							},
+						]}
+						referenceCode={prep.errorReference ?? "req-unknown"}
+						referenceSuffix={strings.errors.referenceSupport}
+					/>
+				</div>
+			</div>
+		);
+	}
+
+	const { application, gap, mocks, studyPlan, readinessPct } = prep.data;
 
 	const startMock = () =>
 		navigate({ to: "/prep/$applicationId/mock/launch", params: { applicationId } });
