@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 
-import { emptyStateStrings } from "../strings";
-import type { ApplicationSummary } from "../mocks/empty-state";
+import { strings } from "../strings";
+import type { ApplicationSummary } from "../mocks/data";
 import { ApplicationTimeline } from "./ApplicationTimeline";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function ApplicationCard({ application, onView }: Props): ReactElement {
-	const { application: copy } = emptyStateStrings;
+	const { application: copy } = strings.empty;
 	return (
 		<section className="mb-9 rounded-xl border border-[#e4e6eb] px-7 py-6">
 			<div className="mb-6 flex items-start justify-between gap-4">

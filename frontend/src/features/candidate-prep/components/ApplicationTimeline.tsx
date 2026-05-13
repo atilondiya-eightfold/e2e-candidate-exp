@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 
-import type { TimelineStage } from "../mocks/empty-state";
+import type { TimelineStage } from "../mocks/data";
 
 interface Props {
 	stages: TimelineStage[];

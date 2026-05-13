@@ -5,6 +5,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { AuthErrorScreen } from "@/components/shared/AuthErrorScreen";
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { useAuthSession } from "@/features/auth";
+import { DemoToolbar } from "@/features/candidate-prep/components/DemoToolbar";
 import { useIdentityBootstrap } from "@/features/identity";
 import { useIdentityStore } from "@/store/identity";
 
@@ -41,9 +42,21 @@ const UNGATED_PREFIXES = ["/prep"];
 function RootLayout(): ReactElement {
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
 	const ungated = UNGATED_PREFIXES.some((p) => pathname.startsWith(p));
+	// Ungated prep routes render full-bleed (their own TopNav). Everything
+	// else gets the boilerplate AppShell + AuthGate.
+	if (ungated) {
+		return (
+			<>
+				<Outlet />
+				<DemoToolbar />
+			</>
+		);
+	}
 	return (
 		<AppShell>
-			{ungated ? <Outlet /> : <AuthGate><Outlet /></AuthGate>}
+			<AuthGate>
+				<Outlet />
+			</AuthGate>
 		</AppShell>
 	);
 }

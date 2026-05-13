@@ -11,6 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrepApplicationIdIndexRouteImport } from './routes/prep/$applicationId/index'
+import { Route as PrepApplicationIdStudyPlanRouteImport } from './routes/prep/$applicationId/study-plan'
+import { Route as PrepApplicationIdGapReportRouteImport } from './routes/prep/$applicationId/gap-report'
+import { Route as PrepApplicationIdTranscriptMockIdRouteImport } from './routes/prep/$applicationId/transcript/$mockId'
+import { Route as PrepApplicationIdMockLaunchRouteImport } from './routes/prep/$applicationId/mock/launch'
+import { Route as PrepApplicationIdMockMockIdFeedbackRouteImport } from './routes/prep/$applicationId/mock/$mockId/feedback'
+import { Route as PrepApplicationIdMockMockIdActiveRouteImport } from './routes/prep/$applicationId/mock/$mockId/active'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +28,116 @@ const PrepApplicationIdIndexRoute = PrepApplicationIdIndexRouteImport.update({
   path: '/prep/$applicationId/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrepApplicationIdStudyPlanRoute =
+  PrepApplicationIdStudyPlanRouteImport.update({
+    id: '/prep/$applicationId/study-plan',
+    path: '/prep/$applicationId/study-plan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PrepApplicationIdGapReportRoute =
+  PrepApplicationIdGapReportRouteImport.update({
+    id: '/prep/$applicationId/gap-report',
+    path: '/prep/$applicationId/gap-report',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PrepApplicationIdTranscriptMockIdRoute =
+  PrepApplicationIdTranscriptMockIdRouteImport.update({
+    id: '/prep/$applicationId/transcript/$mockId',
+    path: '/prep/$applicationId/transcript/$mockId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PrepApplicationIdMockLaunchRoute =
+  PrepApplicationIdMockLaunchRouteImport.update({
+    id: '/prep/$applicationId/mock/launch',
+    path: '/prep/$applicationId/mock/launch',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PrepApplicationIdMockMockIdFeedbackRoute =
+  PrepApplicationIdMockMockIdFeedbackRouteImport.update({
+    id: '/prep/$applicationId/mock/$mockId/feedback',
+    path: '/prep/$applicationId/mock/$mockId/feedback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PrepApplicationIdMockMockIdActiveRoute =
+  PrepApplicationIdMockMockIdActiveRouteImport.update({
+    id: '/prep/$applicationId/mock/$mockId/active',
+    path: '/prep/$applicationId/mock/$mockId/active',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/prep/$applicationId/gap-report': typeof PrepApplicationIdGapReportRoute
+  '/prep/$applicationId/study-plan': typeof PrepApplicationIdStudyPlanRoute
   '/prep/$applicationId': typeof PrepApplicationIdIndexRoute
+  '/prep/$applicationId/mock/launch': typeof PrepApplicationIdMockLaunchRoute
+  '/prep/$applicationId/transcript/$mockId': typeof PrepApplicationIdTranscriptMockIdRoute
+  '/prep/$applicationId/mock/$mockId/active': typeof PrepApplicationIdMockMockIdActiveRoute
+  '/prep/$applicationId/mock/$mockId/feedback': typeof PrepApplicationIdMockMockIdFeedbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/prep/$applicationId/gap-report': typeof PrepApplicationIdGapReportRoute
+  '/prep/$applicationId/study-plan': typeof PrepApplicationIdStudyPlanRoute
   '/prep/$applicationId': typeof PrepApplicationIdIndexRoute
+  '/prep/$applicationId/mock/launch': typeof PrepApplicationIdMockLaunchRoute
+  '/prep/$applicationId/transcript/$mockId': typeof PrepApplicationIdTranscriptMockIdRoute
+  '/prep/$applicationId/mock/$mockId/active': typeof PrepApplicationIdMockMockIdActiveRoute
+  '/prep/$applicationId/mock/$mockId/feedback': typeof PrepApplicationIdMockMockIdFeedbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/prep/$applicationId/gap-report': typeof PrepApplicationIdGapReportRoute
+  '/prep/$applicationId/study-plan': typeof PrepApplicationIdStudyPlanRoute
   '/prep/$applicationId/': typeof PrepApplicationIdIndexRoute
+  '/prep/$applicationId/mock/launch': typeof PrepApplicationIdMockLaunchRoute
+  '/prep/$applicationId/transcript/$mockId': typeof PrepApplicationIdTranscriptMockIdRoute
+  '/prep/$applicationId/mock/$mockId/active': typeof PrepApplicationIdMockMockIdActiveRoute
+  '/prep/$applicationId/mock/$mockId/feedback': typeof PrepApplicationIdMockMockIdFeedbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/prep/$applicationId'
+  fullPaths:
+    | '/'
+    | '/prep/$applicationId/gap-report'
+    | '/prep/$applicationId/study-plan'
+    | '/prep/$applicationId'
+    | '/prep/$applicationId/mock/launch'
+    | '/prep/$applicationId/transcript/$mockId'
+    | '/prep/$applicationId/mock/$mockId/active'
+    | '/prep/$applicationId/mock/$mockId/feedback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/prep/$applicationId'
-  id: '__root__' | '/' | '/prep/$applicationId/'
+  to:
+    | '/'
+    | '/prep/$applicationId/gap-report'
+    | '/prep/$applicationId/study-plan'
+    | '/prep/$applicationId'
+    | '/prep/$applicationId/mock/launch'
+    | '/prep/$applicationId/transcript/$mockId'
+    | '/prep/$applicationId/mock/$mockId/active'
+    | '/prep/$applicationId/mock/$mockId/feedback'
+  id:
+    | '__root__'
+    | '/'
+    | '/prep/$applicationId/gap-report'
+    | '/prep/$applicationId/study-plan'
+    | '/prep/$applicationId/'
+    | '/prep/$applicationId/mock/launch'
+    | '/prep/$applicationId/transcript/$mockId'
+    | '/prep/$applicationId/mock/$mockId/active'
+    | '/prep/$applicationId/mock/$mockId/feedback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PrepApplicationIdGapReportRoute: typeof PrepApplicationIdGapReportRoute
+  PrepApplicationIdStudyPlanRoute: typeof PrepApplicationIdStudyPlanRoute
   PrepApplicationIdIndexRoute: typeof PrepApplicationIdIndexRoute
+  PrepApplicationIdMockLaunchRoute: typeof PrepApplicationIdMockLaunchRoute
+  PrepApplicationIdTranscriptMockIdRoute: typeof PrepApplicationIdTranscriptMockIdRoute
+  PrepApplicationIdMockMockIdActiveRoute: typeof PrepApplicationIdMockMockIdActiveRoute
+  PrepApplicationIdMockMockIdFeedbackRoute: typeof PrepApplicationIdMockMockIdFeedbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +156,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrepApplicationIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prep/$applicationId/study-plan': {
+      id: '/prep/$applicationId/study-plan'
+      path: '/prep/$applicationId/study-plan'
+      fullPath: '/prep/$applicationId/study-plan'
+      preLoaderRoute: typeof PrepApplicationIdStudyPlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prep/$applicationId/gap-report': {
+      id: '/prep/$applicationId/gap-report'
+      path: '/prep/$applicationId/gap-report'
+      fullPath: '/prep/$applicationId/gap-report'
+      preLoaderRoute: typeof PrepApplicationIdGapReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prep/$applicationId/transcript/$mockId': {
+      id: '/prep/$applicationId/transcript/$mockId'
+      path: '/prep/$applicationId/transcript/$mockId'
+      fullPath: '/prep/$applicationId/transcript/$mockId'
+      preLoaderRoute: typeof PrepApplicationIdTranscriptMockIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prep/$applicationId/mock/launch': {
+      id: '/prep/$applicationId/mock/launch'
+      path: '/prep/$applicationId/mock/launch'
+      fullPath: '/prep/$applicationId/mock/launch'
+      preLoaderRoute: typeof PrepApplicationIdMockLaunchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prep/$applicationId/mock/$mockId/feedback': {
+      id: '/prep/$applicationId/mock/$mockId/feedback'
+      path: '/prep/$applicationId/mock/$mockId/feedback'
+      fullPath: '/prep/$applicationId/mock/$mockId/feedback'
+      preLoaderRoute: typeof PrepApplicationIdMockMockIdFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prep/$applicationId/mock/$mockId/active': {
+      id: '/prep/$applicationId/mock/$mockId/active'
+      path: '/prep/$applicationId/mock/$mockId/active'
+      fullPath: '/prep/$applicationId/mock/$mockId/active'
+      preLoaderRoute: typeof PrepApplicationIdMockMockIdActiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PrepApplicationIdGapReportRoute: PrepApplicationIdGapReportRoute,
+  PrepApplicationIdStudyPlanRoute: PrepApplicationIdStudyPlanRoute,
   PrepApplicationIdIndexRoute: PrepApplicationIdIndexRoute,
+  PrepApplicationIdMockLaunchRoute: PrepApplicationIdMockLaunchRoute,
+  PrepApplicationIdTranscriptMockIdRoute:
+    PrepApplicationIdTranscriptMockIdRoute,
+  PrepApplicationIdMockMockIdActiveRoute:
+    PrepApplicationIdMockMockIdActiveRoute,
+  PrepApplicationIdMockMockIdFeedbackRoute:
+    PrepApplicationIdMockMockIdFeedbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
