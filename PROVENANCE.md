@@ -54,3 +54,20 @@ the hub steady-state screen is built (same component).
 
 Up next: hub steady-state (`hub-meta.html`, US-2.1) — same route, data-driven branch.
 Will need the BFF's `/state` endpoint live (waiting on backend api-catalog update).
+
+---
+
+## Sync — 2026-05-13 (api-contract + headless-apis spec + real-tenant gate)
+
+Sources updated on `atilondiya/candidate-prep-adaptive-design` branch of vscode after initial bootstrap. New files copied in:
+
+| Source (vscode) | Target (this repo) | What it is |
+|---|---|---|
+| `docs/candidate-prep/api-contract.md` | `docs/api-contract.md` | **Frontend API contract** for the 7 v2 endpoints — auth, response envelope, errors, all endpoint shapes |
+| `docs/superpowers/specs/2026-05-12-candidate-prep-headless-apis-design.md` | `docs/backend-headless-apis-spec.md` | Backend implementation design for the same 7 endpoints (ephemeral prep-session, HMAC-encoded, no DB) |
+| `docs/candidate-prep/phase1-gate-decision.md` | `docs/phase1-gate-decision.md` | Updated with real-tenant S1/S2 PASS verdicts (was BLOCKED) |
+| `docs/candidate-prep/phase1-s2-livekit.md` | `docs/phase1-s2-livekit.md` | Real-tenant LiveKit init_call verification + the two seeding prerequisites for Phase 2 mock |
+
+vscode commit at sync time: `4741007d38b` (HEAD of `atilondiya/candidate-prep-adaptive-design` after bootstrap) plus subsequent commits up through `463d97a2ba2`.
+
+The `mock/feedback/active` endpoints are intentionally NOT in `api-contract.md` — that's Phase 2 work. v0 of this React app covers gap report / readiness / stage content / calendar / prep-session creation only.
