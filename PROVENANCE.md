@@ -165,3 +165,94 @@ Path forward when production-ready: set `VITE_REQUIRE_PREP_AUTH=true` in
 3. Add an integration smoke test for the proxy on candidate_prep paths —
    one happy path (`GET /applications`) is enough.
 4. When Phase 2 mock-interview APIs land, wire `MockLaunchPage` etc.
+
+---
+
+## Dev log — 2026-05-13 (v1 API contract integration)
+
+### What landed
+
+Backend shipped v1 of the candidate-prep contract (§8 of
+`docs/api-contract.md`) — 11 new endpoints + 3 field deltas covering every
+requirement from `docs/frontend-api-requirements.md`. This session rolled
+that through the frontend.
+
+**Doc:** updated `docs/api-contract.md` to v1 (the §8 surface from the
+backend team's response).
+
+**Hooks + types** (`frontend/src/features/candidate-prep/hooks/index.ts`):
+- 4 new mutations: `useRegenerateGapAnalysis` (§8.4),
+  `useCompleteStudyItem` / `useUncompleteStudyItem` (§8.6/8.7),
+  `useCreateMock` (§8.9), `useDiscardMock` (§8.11).
+- 5 new queries: `useStudyPlan` (§8.5), `useMocks` (§8.8), `useMock` (§8.10),
+  `useMockStatus` (§8.12, polls every 3s and stops on terminal status),
+  `useMockFeedback` (§8.13), `useMockTranscript` (§8.14).
+- Wire types in `api/types.ts` extended with the new shapes; v0 types kept
+  intact and v1 fields added as optionals where they're deltas on existing
+  endpoints.
+- `api/client.ts` gained `cpDelete` for the discard-mock path.
+
+**Selector** (`hooks/use-prep-state.ts`): now reads
+`gap-analysis.dimensions[]` directly (chip vocabulary surfaces unchanged),
+the mock-history tile is sourced from `GET /mocks`, the study plan tile
+from `GET /study-plan`, and the application card pulls `interviewer_name`,
+`duration_min`, `estimated_duration_label`, `focus_summary` from the new
+stage metadata fields when present.
+
+**Pages wired:**
+- `HubPage` keeps using the selector (no diff; it picks up the new fields
+  automatically).
+- `GapReportPage` now reads from `usePrepData` instead of the fixture so
+  it shows real `dimensions[]` + chip vocabulary when the API is up.
+- `StudyPlanPage` reads from `usePrepData` and uses the new
+  `useCompleteStudyItem` / `useUncompleteStudyItem` mutations — the
+  checkbox toggle is optimistic locally and POSTs the change to the BFF
+  when a `prepSessionId` is known. The mutation returns the refreshed
+  plan; the cache key gets seeded so the next selector run sees it.
+
+**BFF mock fallback** (`backend/app/services/mock_eightfold.py`):
+extended to match v1 across every new path. Returns deterministic
+canned responses for `/applications`, `/applications/<id>`,
+`/prep-session/<id>/gap-analysis` (with `dimensions[]` + chips),
+`/prep-session/<id>/readiness`, `/stage/<id>/content` (with
+`how_evaluated` + `recruiter_contact_hint`), `/stage/<id>/calendar`,
+`/study-plan`, `/mocks`, `/mocks/<id>`, `/mocks/<id>/status`,
+`/mocks/<id>/feedback`, `/mocks/<id>/transcript`. POST/DELETE paths
+still bypass the mock (proxy contract — mock only fires on GET in local
+env), which is fine for now — the recommended client flow doesn't call
+POST `/prep-session` since `prep_session_id` is on every `/applications`
+row.
+
+### Verified in dev preview
+
+- `/prep/app_mock_01` (hub): renders full v1 layout with the new stage
+  header copy ("Technical screen with Aditi · Mon Apr 13 · 7:00 PM IST"
+  / "12 days away · 30–60 min · system design focus") sourced from the
+  selector. Falls back to fixture when the API is unreachable.
+- `/prep/app_mock_01/gap-report`: severity counts, dimension cards, chip
+  vocabulary all render. Chips are the canonical `<dim>-fundamentals`,
+  `<dim>-practice`, `<dim>-pitfalls` triple the contract promises.
+
+### Known gaps
+
+- **MockLaunch / MockActive / MockFeedback / Transcript pages** still
+  consume the local fixture directly. Hooks exist (`useCreateMock`,
+  `useMock`, `useMockStatus`, `useMockFeedback`, `useMockTranscript`) —
+  pages just haven't been refactored yet. Same pattern as `GapReportPage`:
+  swap `populatedState.*` for the hook + fall back to fixture on error.
+- **`POST /prep-session` and `DELETE /mocks/:id`** — no local mock fallback
+  (proxy only consults `mock_for` on GET in local env). Recommended client
+  flow doesn't need POST `/prep-session`; discard-mock only fires from the
+  US-7.3 path. Both will work against the real tenant; offline dev will
+  see a 502.
+- **No integration smoke test** added for the proxy on candidate_prep
+  paths yet.
+- **`VITE_REQUIRE_PREP_AUTH=true` not yet enabled in prod build config** —
+  flip when the deployment env is set up.
+
+### Up next
+
+1. Wire the four remaining mock-interview pages to their hooks.
+2. Add an integration smoke test for the proxy on a candidate_prep path.
+3. Set `VITE_REQUIRE_PREP_AUTH=true` in `frontend/.env.production` and
+   verify against the real dev tenant.

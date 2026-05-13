@@ -6,7 +6,8 @@ import { PillButton } from "../components/PillButton";
 import { SeverityBadge } from "../components/SeverityBadge";
 import { TopNav } from "../components/TopNav";
 import { TopicChips } from "../components/TopicChips";
-import { populatedState, type GapSeverity } from "../mocks/data";
+import { usePrepData } from "../hooks/use-prep-state";
+import { type GapSeverity } from "../mocks/data";
 import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
 
@@ -25,7 +26,8 @@ export function GapReportPage({ applicationId }: Props): ReactElement {
 	const demoState = usePrepDemoStore((s) => s.state);
 	const [filter, setFilter] = useState<GapSeverity | null>(null);
 	const s = strings.gapReport;
-	const { gap } = populatedState;
+	const prep = usePrepData(applicationId);
+	const gap = prep.data?.gap ?? null;
 
 	const backToHub = () =>
 		navigate({ to: "/prep/$applicationId", params: { applicationId } });

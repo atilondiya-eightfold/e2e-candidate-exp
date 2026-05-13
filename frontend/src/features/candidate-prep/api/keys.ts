@@ -18,4 +18,15 @@ export const candidatePrepKeys = {
 		[...candidatePrepKeys.all, "stage-content", stageId] as const,
 	stageCalendar: (stageId: string) =>
 		[...candidatePrepKeys.all, "stage-calendar", stageId] as const,
+	studyPlan: (prepSessionId: string) =>
+		[...candidatePrepKeys.all, "study-plan", prepSessionId] as const,
+	mocks: () => [...candidatePrepKeys.all, "mocks"] as const,
+	mock: (mockId: string) =>
+		[...candidatePrepKeys.all, "mock", mockId] as const,
+	mockStatus: (mockId: string) =>
+		[...candidatePrepKeys.all, "mock-status", mockId] as const,
+	mockFeedback: (mockId: string) =>
+		[...candidatePrepKeys.all, "mock-feedback", mockId] as const,
+	mockTranscript: (mockId: string) =>
+		[...candidatePrepKeys.all, "mock-transcript", mockId] as const,
 };

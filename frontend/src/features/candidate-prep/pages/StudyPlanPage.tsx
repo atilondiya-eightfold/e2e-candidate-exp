@@ -4,11 +4,20 @@ import { useMemo, useState, type ReactElement } from "react";
 import { TopNav } from "../components/TopNav";
 import { TopicChips } from "../components/TopicChips";
 import {
+	useApplication,
+} from "../hooks";
+import {
+	useCompleteStudyItem,
+	useUncompleteStudyItem,
+} from "../hooks";
+import { usePrepData } from "../hooks/use-prep-state";
+import {
 	populatedState,
 	TYPE_ICONS,
 	type StudyResource,
 	type StudySection,
 } from "../mocks/data";
+import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
 
 interface Props {
@@ -18,8 +27,20 @@ interface Props {
 export function StudyPlanPage({ applicationId }: Props): ReactElement {
 	const navigate = useNavigate();
 	const s = strings.studyPlan;
-	const initial = populatedState.studyPlan!;
+	const demoState = usePrepDemoStore((s) => s.state);
+	const prep = usePrepData(applicationId);
+	const appQ = useApplication(
+		demoState === "populated" ? applicationId : undefined,
+	);
+	const prepSessionId = appQ.data?.prep_session_id;
+	const completeMut = useCompleteStudyItem();
+	const uncompleteMut = useUncompleteStudyItem();
 
+	const initial = prep.data?.studyPlan ?? populatedState.studyPlan!;
+
+	// Local optimistic state. When the API is wired (prepSessionId set), the
+	// mutation also seeds the server-returned plan into the cache and the
+	// selector re-flows it down.
 	const [doneIds, setDoneIds] = useState<Set<string>>(() => {
 		const set = new Set<string>();
 		for (const sec of initial.sections) {
@@ -28,13 +49,20 @@ export function StudyPlanPage({ applicationId }: Props): ReactElement {
 		return set;
 	});
 
-	const toggleDone = (id: string) =>
+	const toggleDone = (id: string) => {
 		setDoneIds((prev) => {
 			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
+			const willBeDone = !next.has(id);
+			if (willBeDone) next.add(id);
+			else next.delete(id);
+			if (prepSessionId) {
+				const args = { itemId: id, prepSessionId };
+				if (willBeDone) completeMut.mutate(args);
+				else uncompleteMut.mutate(args);
+			}
 			return next;
 		});
+	};
 
 	const sections = useMemo(
 		() =>

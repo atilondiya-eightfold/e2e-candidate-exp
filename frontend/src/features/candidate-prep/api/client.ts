@@ -66,3 +66,17 @@ export async function cpPost<T>(path: string, body: unknown): Promise<T> {
 		t.cancel();
 	}
 }
+
+export async function cpDelete<T>(path: string): Promise<T> {
+	const t = withTimeout(DEFAULT_TIMEOUT_MS);
+	try {
+		const r = await fetch(`${BASE}${path}`, {
+			method: "DELETE",
+			credentials: "include",
+			signal: t.signal,
+		});
+		return await unwrap<T>(r);
+	} finally {
+		t.cancel();
+	}
+}
