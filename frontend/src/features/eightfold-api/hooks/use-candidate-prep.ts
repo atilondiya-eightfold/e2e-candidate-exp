@@ -9,6 +9,7 @@
 //   POST /api/v2/candidate_prep/candidate-prep/mock-interviews
 //   GET  /api/v2/candidate_prep/candidate-prep/mock-status/<id>
 //   GET  /api/v2/candidate_prep/candidate-prep/mock-summary/<id>
+//   GET  /api/v2/candidate_prep/candidate-prep/mock-history
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -94,6 +95,22 @@ export interface MockSummary {
 	overallScores: MockSummaryOverallScores | null;
 }
 
+export interface MockHistoryRow {
+	interview_session_id: number;
+	score: number | null;
+	status: MockStatusValue;
+	raw_status: string;
+	date_label: string;
+	duration_min: number | null;
+	t_create: number | null;
+}
+
+export interface MockHistory {
+	mocks: MockHistoryRow[];
+	readiness_pct: number;
+	readiness_label: "low" | "moderate" | "high";
+}
+
 // -----------------------------------------------------------------------
 // Hooks
 // -----------------------------------------------------------------------
@@ -131,6 +148,26 @@ export function useMockStatus(
  * plus the ScoreInterview rubric. First fetch may take 15-30s while the
  * scoring LLM runs; cache afterwards so the page is snappy on re-render.
  */
+/**
+ * GET /candidate-prep/mock-history — list completed mocks + derived
+ * readiness % for the HubPage. profileId is required while we run under
+ * service-account auth (no candidate session to infer from).
+ */
+export function useMockHistory(
+	profileId: number | undefined,
+	options?: { enabled?: boolean; refetchInterval?: number | false }
+) {
+	const id = profileId ? String(profileId) : "";
+	return useQuery<MockHistory>({
+		queryKey: eightfoldKeys.sub(ENTITY, id, "history"),
+		queryFn: () =>
+			fetchApiGet<MockHistory>(`${BASE}/mock-history`, { profileId: id }),
+		enabled: Boolean(id) && (options?.enabled ?? true),
+		refetchInterval: options?.refetchInterval ?? false,
+		staleTime: 30_000,
+	});
+}
+
 export function useMockSummary(
 	mockInterviewId: number | string | undefined,
 	options?: { enabled?: boolean }
