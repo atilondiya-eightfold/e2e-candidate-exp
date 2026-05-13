@@ -31,6 +31,13 @@ def _passthrough_headers(request: Request) -> dict[str, str]:
     content_type = request.headers.get("content-type")
     if content_type:
         headers["content-type"] = content_type
+    # Some upstream endpoints (candidate-prep voice mock) use request.host
+    # to embed publicly-reachable callback URLs in the LiveKit JWT. When
+    # talking to a local dev backend on localhost:8003 the agent worker
+    # can't reach `localhost`, so optionally pin the Host the upstream sees.
+    host_override = getattr(settings, "EF_API_HOST_OVERRIDE", "")
+    if host_override:
+        headers["host"] = host_override
     return headers
 
 
