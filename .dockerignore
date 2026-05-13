@@ -1,0 +1,49 @@
+# Keep the build context small + deterministic. Anything below here is
+# either rebuilt inside the image or never needs to be there.
+
+# Version control + editor
+.git
+.gitignore
+.idea
+.vscode
+*.swp
+
+# Top-level
+.env
+.env.local
+.env.*.local
+*.log
+docs
+PROVENANCE.md
+.claude
+
+# Frontend
+frontend/node_modules
+frontend/.next
+frontend/dist
+frontend/build
+frontend/coverage
+frontend/playwright-report
+frontend/test-results
+frontend/.vite
+frontend/.turbo
+frontend/.env
+frontend/.env.local
+frontend/.env.development
+
+# Backend
+backend/.venv
+backend/__pycache__
+backend/**/__pycache__
+backend/**/*.pyc
+backend/**/*.pyo
+backend/.pytest_cache
+backend/.ruff_cache
+backend/.mypy_cache
+backend/htmlcov
+backend/.coverage
+backend/tests
+
+# OS noise
+.DS_Store
+Thumbs.db

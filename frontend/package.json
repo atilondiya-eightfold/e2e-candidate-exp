@@ -8,6 +8,7 @@
   "engines": {
     "node": ">=20.19.0"
   },
+  "packageManager": "pnpm@10.33.0",
   "scripts": {
     "setup": "git init && npx husky init && npx playwright install && shx rm .husky/pre-commit",
     "format": "prettier \"src/**/*.{ts,tsx}\" --write",

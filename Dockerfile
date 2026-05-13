@@ -3,11 +3,20 @@
 # ---------- Stage 1: build the frontend ----------
 FROM node:22-alpine AS frontend-build
 
+# Skip husky `prepare` (no .git in build context) and let pnpm itself run
+# the lockfile install non-interactively.
+ENV HUSKY=0 \
+    CI=true
+
 RUN corepack enable
 
 WORKDIR /src
 
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
+# pnpm version is pinned in package.json's `packageManager` field. pnpm
+# 11.x raises ignored-build-scripts to a hard error; 10.33.0 keeps them
+# as warnings. Native postinstalls for @swc/core, esbuild, msw aren't
+# needed for `vite build` to succeed.
 RUN pnpm install --frozen-lockfile
 
 COPY frontend/ ./
@@ -35,9 +44,8 @@ COPY backend/pyproject.toml backend/uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project
 
-# Copy backend source
+# Copy backend source. No alembic.ini in this BFF — there's no DB.
 COPY backend/app ./app
-COPY backend/alembic.ini ./alembic.ini
 
 # Install the project itself
 RUN --mount=type=cache,target=/root/.cache/uv \
