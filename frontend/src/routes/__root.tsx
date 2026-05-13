@@ -9,6 +9,18 @@ import { DemoToolbar } from "@/features/candidate-prep/components/DemoToolbar";
 import { useIdentityBootstrap } from "@/features/identity";
 import { useIdentityStore } from "@/store/identity";
 
+// /prep/* renders full-bleed (its own TopNav) but still needs the candidate's
+// email for BFF→Eightfold OAuth (sub=email). It stays inside AuthGate (so the
+// BFF's cookie-derived identity flows through) but skips the AppShell chrome.
+//
+// Dev escape hatch: VITE_REQUIRE_PREP_AUTH=true forces the gate in dev. With
+// the flag unset (default in dev) the gate is skipped for /prep so the page
+// renders against the demo-store fixtures without a backend. Prod builds set
+// the env var to "true" — see PROVENANCE.md for the rationale.
+const FULL_BLEED_PREFIXES = ["/prep"];
+const REQUIRE_PREP_AUTH =
+	import.meta.env["VITE_REQUIRE_PREP_AUTH"] === "true";
+
 function AuthGate({ children }: { children: ReactNode }): ReactElement {
 	const { data, isLoading, isError } = useAuthSession();
 	const setEmail = useIdentityStore((s) => s.setEmail);
@@ -34,31 +46,26 @@ function AuthGate({ children }: { children: ReactNode }): ReactElement {
 	return <>{children}</>;
 }
 
-// Routes that handle their own auth context (e.g. PCS deep-link to /prep/*).
-// AuthGate is skipped for these — the candidate-prep flow carries its own
-// session token from the parent application.
-const UNGATED_PREFIXES = ["/prep"];
-
 function RootLayout(): ReactElement {
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
-	const ungated = UNGATED_PREFIXES.some((p) => pathname.startsWith(p));
-	// Ungated prep routes render full-bleed (their own TopNav). Everything
-	// else gets the boilerplate AppShell + AuthGate.
-	if (ungated) {
+	const fullBleed = FULL_BLEED_PREFIXES.some((p) => pathname.startsWith(p));
+	const skipAuth = fullBleed && !REQUIRE_PREP_AUTH;
+	const inner = skipAuth ? (
+		<Outlet />
+	) : (
+		<AuthGate>
+			<Outlet />
+		</AuthGate>
+	);
+	if (fullBleed) {
 		return (
 			<>
-				<Outlet />
+				{inner}
 				<DemoToolbar />
 			</>
 		);
 	}
-	return (
-		<AppShell>
-			<AuthGate>
-				<Outlet />
-			</AuthGate>
-		</AppShell>
-	);
+	return <AppShell>{inner}</AppShell>;
 }
 
 export const Route = createRootRoute({

@@ -6,7 +6,7 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": [
         "-lc",
-        "source ~/.nvm/nvm.sh && nvm use 22 && cd frontend && pnpm run dev --port ${PORT:-5173}"
+        "source ~/.nvm/nvm.sh && nvm use 22 && cd frontend && VITE_API_PROXY_TARGET=http://localhost:8002 pnpm run dev --port ${PORT:-5173}"
       ],
       "port": 5173,
       "autoPort": false
@@ -76,6 +76,16 @@
       ],
       "port": 8001,
       "autoPort": true
+    },
+    {
+      "name": "candidate-prep-backend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "cd /Users/atilondiya/Desktop/repos/candidate-prep/backend && uv run fastapi run --reload --port 8002 app/main.py"
+      ],
+      "port": 8002,
+      "autoPort": false
     }
   ]
 }

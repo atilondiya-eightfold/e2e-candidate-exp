@@ -4,11 +4,16 @@ import { useMemo, useState, type ReactElement } from "react";
 import { useMockHistory } from "@/features/eightfold-api/hooks";
 
 import { ApplicationTimeline } from "../components/ApplicationTimeline";
+import { ErrorPanel } from "../components/ErrorPanel";
 import { PillButton } from "../components/PillButton";
 import { PrepFooter } from "../components/PrepFooter";
 import { TopNav } from "../components/TopNav";
-import { populatedState, type GapDimension, type MockSummary } from "../mocks/data";
+import { usePrepData } from "../hooks/use-prep-state";
+import type { GapDimension, MockSummary } from "../mocks/data";
+import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
+
+import { EmptyStatePage } from "./EmptyStatePage";
 
 // Demo profile id — same as MockLaunchPage. Move into shared config / derive
 // from current candidate session once we're past the hackathon demo.
@@ -21,20 +26,23 @@ interface Props {
 export function HubPage({ applicationId }: Props): ReactElement {
 	const navigate = useNavigate();
 	const [aboutOpen, setAboutOpen] = useState(true);
-	const { application, gap, mocks: mockState, studyPlan, readinessPct: mockReadiness } =
-		populatedState;
+	// Hooks must run unconditionally before any early-return guards below.
+	const prep = usePrepData(applicationId);
+	const history = useMockHistory(DEMO_PROFILE_ID);
 	const s = strings.hub;
 
-	// Real data from /candidate-prep/mock-history. Falls back to the mock
-	// fixture when the API errors / is still loading so the hub never blanks.
-	const history = useMockHistory(DEMO_PROFILE_ID);
-	const { mocks, readinessPct } = useMemo<{
+	// Overlay real /mock-history data on top of the demo fixture's mocks
+	// + readiness. Falls back to whatever usePrepData returned when the
+	// API is loading or errored.
+	const baseMocks: MockSummary[] = prep.data?.mocks ?? [];
+	const baseReadiness: number = prep.data?.readinessPct ?? 0;
+	const { mocks: liveMocks, readinessPct: liveReadiness } = useMemo<{
 		mocks: MockSummary[];
 		readinessPct: number;
 	}>(() => {
 		const apiRows = history.data?.mocks;
 		if (!apiRows || apiRows.length === 0) {
-			return { mocks: mockState, readinessPct: mockReadiness };
+			return { mocks: baseMocks, readinessPct: baseReadiness };
 		}
 		// Backend returns most-recent first. The tile reads `mocks[length-1]`
 		// for "latest", so flip to ascending here.
@@ -54,9 +62,57 @@ export function HubPage({ applicationId }: Props): ReactElement {
 			}));
 		return {
 			mocks: mapped,
-			readinessPct: history.data?.readiness_pct ?? mockReadiness,
+			readinessPct: history.data?.readiness_pct ?? baseReadiness,
 		};
-	}, [history.data, mockState, mockReadiness]);
+	}, [history.data, baseMocks, baseReadiness]);
+
+	if (prep.state === "empty") {
+		return <EmptyStatePage applicationId={applicationId} />;
+	}
+	if (prep.state === "loading") {
+		return (
+			<div className="bg-white">
+				<TopNav applicationId={applicationId} />
+				<div className="mx-auto max-w-4xl px-4 py-16 text-center text-[13px] text-[#65676b]">
+					Loading your prep dashboard…
+				</div>
+			</div>
+		);
+	}
+	if (prep.state === "error" || !prep.data) {
+		return (
+			<div className="bg-white">
+				<TopNav applicationId={applicationId} />
+				<div className="mx-auto max-w-3xl px-4 py-10">
+					<ErrorPanel
+						tone="red"
+						icon="✦"
+						title={strings.errors.genericTitle}
+						body={strings.errors.genericBody}
+						actions={[
+							{
+								label: strings.errors.retryNow,
+								onClick: () =>
+									usePrepDemoStore.getState().setState("populated"),
+								variant: "primary",
+							},
+							{
+								label: strings.errors.refresh,
+								onClick: () => window.location.reload(),
+								variant: "secondary",
+							},
+						]}
+						referenceCode={prep.errorReference ?? "req-unknown"}
+						referenceSuffix={strings.errors.referenceSupport}
+					/>
+				</div>
+			</div>
+		);
+	}
+
+	const { application, gap, studyPlan } = prep.data;
+	const mocks = liveMocks;
+	const readinessPct = liveReadiness;
 
 	const startMock = () =>
 		navigate({ to: "/prep/$applicationId/mock/launch", params: { applicationId } });

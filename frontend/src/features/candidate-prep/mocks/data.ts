@@ -104,6 +104,14 @@ export interface TranscriptTurn {
 	highlight?: "strong" | "weak";
 }
 
+export interface StudyPlan {
+	totalRemainingMin: number;
+	completedCount: number;
+	totalCount: number;
+	upNext: { sectionId: string; resourceId: string } | null;
+	sections: StudySection[];
+}
+
 export interface PrepState {
 	application: ApplicationSummary;
 	gap: {
@@ -113,13 +121,7 @@ export interface PrepState {
 		counts: { high: number; medium: number; covered: number };
 	} | null;
 	mocks: MockSummary[];
-	studyPlan: {
-		totalRemainingMin: number;
-		completedCount: number;
-		totalCount: number;
-		upNext: { resourceId: string; sectionId: string } | null;
-		sections: StudySection[];
-	} | null;
+	studyPlan: StudyPlan | null;
 	readinessPct: number;
 }
 

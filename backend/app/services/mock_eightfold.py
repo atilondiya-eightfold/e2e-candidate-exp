@@ -1,8 +1,15 @@
-"""Default mock-fallback for upstream-unreachable Eightfold v2 paths.
+"""Mock-fallback hook for upstream-unreachable Eightfold v2 paths.
 
-When `ef_proxy.py` cannot reach upstream (`httpx.RequestError`),
-it falls back to `mock_for(path, params)`. Add per-route stubs
-here as your product needs them.
+`ef_proxy.py` consults this only when ENVIRONMENT=local AND the upstream
+request errors or the OAuth token mint fails. Returning `None` lets the
+proxy propagate the original 502 — which is what we want now that the
+BFF is wired against the real tenant; canned responses mask real
+failures and make misconfiguration silent.
+
+If you need to dev offline against a known shape, add a targeted stub
+here and ship it behind a separate env flag. See the file's git history
+(commit pre-`d27b426`) for an example mock_eightfold that covered the
+full candidate_prep surface.
 """
 
 from __future__ import annotations
@@ -11,17 +18,4 @@ from typing import Any
 
 
 def mock_for(path: str, params: dict[str, Any]) -> dict[str, Any] | None:  # noqa: ARG001
-    """Return a canned response shaped like upstream EF, or None.
-
-    Returning None lets `ef_proxy` propagate the original upstream error.
-    """
-    # Example — uncomment + adapt for your project:
-    #
-    # if path == "/employees" and "filterQuery" in params:
-    #     return {
-    #         "data": [{
-    #             "id": "demo-encoded-id",
-    #             "email": params["filterQuery"].split(":", 1)[-1],
-    #         }],
-    #     }
     return None
