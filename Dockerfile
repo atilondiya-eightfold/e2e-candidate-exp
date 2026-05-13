@@ -1,4 +1,6 @@
-# Multi-stage build: frontend (node) -> runtime (python + built SPA)
+# Multi-stage build: frontend (node) -> runtime (python + nginx + built SPA)
+# Single image, two processes — nginx on :5173 serves the built SPA and
+# reverse-proxies /api/* to FastAPI on :8010 inside the same container.
 
 # ---------- Stage 1: build the frontend ----------
 FROM node:22-alpine AS frontend-build
@@ -13,10 +15,9 @@ RUN corepack enable
 WORKDIR /src
 
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
-# pnpm version is pinned in package.json's `packageManager` field. pnpm
-# 11.x raises ignored-build-scripts to a hard error; 10.33.0 keeps them
-# as warnings. Native postinstalls for @swc/core, esbuild, msw aren't
-# needed for `vite build` to succeed.
+# pnpm version is pinned in package.json's `packageManager` field (10.33.0)
+# because pnpm 11.x makes ignored-build-scripts a hard error. Native
+# postinstalls for @swc/core, esbuild, msw aren't needed for `vite build`.
 RUN pnpm install --frozen-lockfile
 
 COPY frontend/ ./
@@ -26,7 +27,7 @@ COPY frontend/ ./
 RUN pnpm run build
 
 
-# ---------- Stage 2: python runtime ----------
+# ---------- Stage 2: python runtime + nginx ----------
 FROM python:3.12-slim AS runtime
 
 ENV PYTHONUNBUFFERED=1 \
@@ -34,12 +35,17 @@ ENV PYTHONUNBUFFERED=1 \
     UV_LINK_MODE=copy \
     PATH="/app/.venv/bin:$PATH"
 
+# nginx for the frontend tier; tini gives us proper PID-1 signal handling.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends nginx tini \
+ && rm -rf /var/lib/apt/lists/*
+
 # uv from the official image
 COPY --from=ghcr.io/astral-sh/uv:0.9.26 /uv /uvx /bin/
 
 WORKDIR /app
 
-# Install deps first for better Docker layer caching
+# Install Python deps first for better Docker layer caching
 COPY backend/pyproject.toml backend/uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project
@@ -51,10 +57,16 @@ COPY backend/app ./app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen
 
-# Copy built frontend into the location main.py looks for it
+# Built frontend goes where nginx reads from
 COPY --from=frontend-build /src/dist /app/static
 
-EXPOSE 8000
+# nginx config + entrypoint
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/start.sh   /app/start.sh
+RUN chmod +x /app/start.sh
 
-# Render injects $PORT at runtime; fall back to 8000 for local runs.
-CMD ["sh", "-c", "fastapi run --host 0.0.0.0 --port ${PORT:-8000} app/main.py"]
+# Frontend (nginx) on 5173, backend (FastAPI BFF) on 8010
+EXPOSE 5173 8010
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["/app/start.sh"]
