@@ -10,12 +10,16 @@ import { focusChipsByMock, meetingDetails } from "../mocks/data";
 import { usePrepDemoStore } from "../store";
 import { strings } from "../strings";
 
-// Demo IDs for the rmeena.dev3.eightfold.ai tenant (validated end-to-end
-// in the backend PR). Move these to per-tenant config (or derive from the
-// application) before any rollout; for the hackathon they let the Join
-// button work without an applications API lookup.
-const DEMO_POSITION_ID = 30861877;
-const DEMO_PROFILE_ID = 380274702;
+// Demo IDs for the eightfolddemo-atilondiya.com tenant served behind
+// rmeena.dev3.eightfold.ai. The original ProfileApplication
+// `vs-361133-38495618-1766045290` pointed at a Payroll Coordinator
+// position (38495618), which made the system-design coach babble about
+// payroll. Swap in `Senior Software Development Lead - Web` (38495543)
+// so the agent's position context aligns with the SD questions. Move
+// these to per-tenant config (or derive from the application list)
+// before any rollout.
+const DEMO_POSITION_ID = 38495543;
+const DEMO_PROFILE_ID = 361133;
 const DEMO_FEEDBACK_FORM_TEMPLATE_ID = 1;
 
 /**

@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useState, type ReactElement } from "react";
+import { useMemo, useState, type ReactElement } from "react";
+
+import { useMockHistory } from "@/features/eightfold-api/hooks";
 
 import { ApplicationTimeline } from "../components/ApplicationTimeline";
 import { ErrorPanel } from "../components/ErrorPanel";
@@ -13,6 +15,10 @@ import { strings } from "../strings";
 
 import { EmptyStatePage } from "./EmptyStatePage";
 
+// Demo profile id — same as MockLaunchPage. Move into shared config / derive
+// from current candidate session once we're past the hackathon demo.
+const DEMO_PROFILE_ID = 361133;
+
 interface Props {
 	applicationId: string;
 }
@@ -20,8 +26,45 @@ interface Props {
 export function HubPage({ applicationId }: Props): ReactElement {
 	const navigate = useNavigate();
 	const [aboutOpen, setAboutOpen] = useState(true);
+	// Hooks must run unconditionally before any early-return guards below.
 	const prep = usePrepData(applicationId);
+	const history = useMockHistory(DEMO_PROFILE_ID);
 	const s = strings.hub;
+
+	// Overlay real /mock-history data on top of the demo fixture's mocks
+	// + readiness. Falls back to whatever usePrepData returned when the
+	// API is loading or errored.
+	const baseMocks: MockSummary[] = prep.data?.mocks ?? [];
+	const baseReadiness: number = prep.data?.readinessPct ?? 0;
+	const { mocks: liveMocks, readinessPct: liveReadiness } = useMemo<{
+		mocks: MockSummary[];
+		readinessPct: number;
+	}>(() => {
+		const apiRows = history.data?.mocks;
+		if (!apiRows || apiRows.length === 0) {
+			return { mocks: baseMocks, readinessPct: baseReadiness };
+		}
+		// Backend returns most-recent first. The tile reads `mocks[length-1]`
+		// for "latest", so flip to ascending here.
+		const mapped: MockSummary[] = apiRows
+			.slice()
+			.reverse()
+			.map((row, idx) => ({
+				id: String(row.interview_session_id),
+				number: idx + 1,
+				title: `Mock #${idx + 1}`,
+				dateLabel: row.date_label,
+				durationMin: row.duration_min ?? 0,
+				// Backend score is null until rubric scoring runs. Surface a
+				// stable demo placeholder so the bar chart renders.
+				score: row.score ?? (row.status === "completed" ? 65 : null),
+				status: row.status,
+			}));
+		return {
+			mocks: mapped,
+			readinessPct: history.data?.readiness_pct ?? baseReadiness,
+		};
+	}, [history.data, baseMocks, baseReadiness]);
 
 	if (prep.state === "empty") {
 		return <EmptyStatePage applicationId={applicationId} />;
@@ -67,7 +110,9 @@ export function HubPage({ applicationId }: Props): ReactElement {
 		);
 	}
 
-	const { application, gap, mocks, studyPlan, readinessPct } = prep.data;
+	const { application, gap, studyPlan } = prep.data;
+	const mocks = liveMocks;
+	const readinessPct = liveReadiness;
 
 	const startMock = () =>
 		navigate({ to: "/prep/$applicationId/mock/launch", params: { applicationId } });
