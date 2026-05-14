@@ -38,6 +38,7 @@ export interface Stage {
 	content_available: boolean;
 	// v1 deltas — see §8.1
 	interviewer_name?: string | null;
+	interviewer_title?: string | null;
 	duration_min?: number;
 	estimated_duration_label?: string;
 	focus_summary?: string;
@@ -123,16 +124,16 @@ export interface StageResource {
 	type: "read" | "video" | "book";
 }
 
+// Upstream `/api/v2/candidate_prep/stage/{stageId}/content` returns:
+//   { stageId, name, whatToExpect, howEvaluated, questionsContact, tips[] }
+// (camelCase wire → snake_case after the cp client's normalizer).
 export interface StageContent {
-	stage_type: StageType;
-	title: string;
-	description: string;
-	what_to_expect: string[];
-	checklist: string[];
-	resources: StageResource[];
-	// v1 deltas — three-column panel copy
-	how_evaluated?: string[];
-	recruiter_contact_hint?: string;
+	stage_id: string;
+	name: string;
+	what_to_expect: string;
+	how_evaluated: string;
+	questions_contact: string;
+	tips?: string[];
 }
 
 // 3.7 — calendar
@@ -144,36 +145,36 @@ export interface StageCalendar {
 }
 
 // 8.5 — study plan
+//
+// New backend shape (camelCase wire, snake_case after the cp client's
+// camel→snake normalizer):
+//
+//   { sections: [{ dimension, summary, priority, resources: [...] }],
+//     totalMinutes }  →  { sections: [...], total_minutes }
+//
+// Resources are leaner than before: no per-item id, no done flag, no
+// publisher, no duration_min — instead `minutes`. The frontend synthesizes
+// the missing fields in `use-prep-state.ts`.
+
+export type StudyPriority = "high" | "medium" | "low";
 
 export interface StudyResource {
-	id: string;
 	title: string;
-	type: "read" | "video" | "book";
-	duration_min: number;
 	url: string;
-	publisher?: string;
-	done: boolean;
+	minutes: number;
+	type: "read" | "video" | "book";
 }
 
 export interface StudySection {
-	dimension_id: string;
-	name: string;
-	severity: GapSeverity;
-	total_min: number;
-	completed_count: number;
-	total_count: number;
-	completed: boolean;
-	study_topics: StudyTopic[];
+	dimension: string;
+	summary: string;
+	priority: StudyPriority;
 	resources: StudyResource[];
 }
 
 export interface StudyPlan {
-	prep_session_id: string;
-	total_remaining_min: number;
-	completed_count: number;
-	total_count: number;
-	up_next: { section_id: string; resource_id: string } | null;
 	sections: StudySection[];
+	total_minutes: number;
 }
 
 // 8.6 / 8.7 — study item completion

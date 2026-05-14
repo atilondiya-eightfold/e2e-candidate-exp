@@ -53,6 +53,31 @@ export interface PrepDataResult {
 
 const FIXTURE_REFERENCE = "req-demo-fixture";
 
+const _SCHEDULE_FORMATTER = new Intl.DateTimeFormat(undefined, {
+	weekday: "short",
+	month: "short",
+	day: "numeric",
+	hour: "numeric",
+	minute: "2-digit",
+	hour12: true,
+	timeZoneName: "short",
+});
+
+function formatScheduleLabel(date: Date): string {
+	const parts = _SCHEDULE_FORMATTER.formatToParts(date);
+	const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
+	const weekday = get("weekday");
+	const month = get("month");
+	const day = get("day");
+	const hour = get("hour");
+	const minute = get("minute");
+	const dayPeriod = get("dayPeriod");
+	const tz = get("timeZoneName");
+	const datePart = `${weekday}, ${month} ${day}`;
+	const timePart = `${hour}:${minute} ${dayPeriod}`.trim();
+	return [datePart, timePart, tz].filter(Boolean).join(" · ");
+}
+
 function timelineFromStages(detail: ApplicationDetail): TimelineStage[] {
 	return detail.stages.map((s) => {
 		const status =
@@ -62,7 +87,17 @@ function timelineFromStages(detail: ApplicationDetail): TimelineStage[] {
 					  ["scheduled", "active", "in_progress"].includes(s.status)
 					? "current"
 					: "upcoming";
-		return { label: s.name, status } as TimelineStage;
+		return {
+			id: s.stage_id,
+			label: s.name,
+			status,
+			focusSummary: s.focus_summary ?? null,
+			estimatedDurationLabel: s.estimated_duration_label ?? null,
+			durationMin: s.duration_min ?? null,
+			interviewerName: s.interviewer_name ?? null,
+			interviewerTitle: s.interviewer_title ?? null,
+			scheduledAt: s.scheduled_at ?? null,
+		} as TimelineStage;
 	});
 }
 
@@ -98,7 +133,7 @@ function buildApplicationSummary(
 			parts.push(`with ${activeStage.interviewer_name}`);
 		}
 		if (scheduledAt) {
-			parts.push(scheduledAt.toLocaleString());
+			parts.push(formatScheduleLabel(scheduledAt));
 		}
 	}
 	const stageMetaParts: string[] = [];
@@ -132,41 +167,66 @@ function buildApplicationSummary(
 	};
 }
 
-function studySectionFromApi(s: ApiStudySection): DisplayStudySection {
-	const resources: DisplayStudyResource[] = s.resources.map((r) => ({
-		id: r.id,
+// Maps the new minimal study-plan API shape (sections[]/total_minutes) into
+// the display shape the existing pages already render. Synthesizes resource
+// `id`, `done`, `publisher`, and the per-section `total_min` / counts that
+// the new payload no longer carries directly.
+const PRIORITY_TO_SEVERITY: Record<"high" | "medium" | "low", GapSeverity> = {
+	high: "high",
+	medium: "medium",
+	low: "covered",
+};
+
+function publisherFromUrl(url: string): string | undefined {
+	try {
+		return new URL(url).hostname.replace(/^www\./, "");
+	} catch {
+		return undefined;
+	}
+}
+
+function studySectionFromApi(
+	s: ApiStudySection,
+	idx: number,
+): DisplayStudySection {
+	const dimensionId = `dim-${idx}`;
+	const resources: DisplayStudyResource[] = s.resources.map((r, ri) => ({
+		id: `${dimensionId}-${ri}`,
 		title: r.title,
 		type: r.type,
-		durationMin: r.duration_min,
+		durationMin: r.minutes,
 		url: r.url,
-		publisher: r.publisher,
-		done: r.done,
+		publisher: publisherFromUrl(r.url),
+		done: false,
 	}));
+	const totalMin = resources.reduce((acc, r) => acc + r.durationMin, 0);
 	return {
-		dimensionId: s.dimension_id,
-		name: s.name,
-		severity: s.severity as GapSeverity,
-		totalMin: s.total_min,
-		completedCount: s.completed_count,
-		totalCount: s.total_count,
-		completed: s.completed,
-		studyTopics: s.study_topics.map(chipFromApi),
+		dimensionId,
+		name: s.dimension,
+		severity: PRIORITY_TO_SEVERITY[s.priority] ?? "medium",
+		totalMin,
+		completedCount: 0,
+		totalCount: resources.length,
+		completed: false,
+		studyTopics: [],
 		resources,
 	};
 }
 
 function studyPlanFromApi(plan: ApiStudyPlan): DisplayStudyPlan {
+	const sections = plan.sections.map((s, i) => studySectionFromApi(s, i));
+	const firstWithResources = sections.find((sec) => sec.resources.length > 0);
 	return {
-		totalRemainingMin: plan.total_remaining_min,
-		completedCount: plan.completed_count,
-		totalCount: plan.total_count,
-		upNext: plan.up_next
+		totalRemainingMin: plan.total_minutes,
+		completedCount: 0,
+		totalCount: sections.reduce((a, s) => a + s.totalCount, 0),
+		upNext: firstWithResources
 			? {
-					sectionId: plan.up_next.section_id,
-					resourceId: plan.up_next.resource_id,
+					sectionId: firstWithResources.dimensionId,
+					resourceId: firstWithResources.resources[0]!.id,
 				}
 			: null,
-		sections: plan.sections.map(studySectionFromApi),
+		sections,
 	};
 }
 
@@ -202,7 +262,7 @@ export function usePrepData(applicationId: string): PrepDataResult {
 	const prepSessionId = apiEnabled ? appQ.data?.prep_session_id : undefined;
 	const gapQ = useGapAnalysis(prepSessionId);
 	const readinessQ = useReadiness(prepSessionId);
-	const studyPlanQ = useStudyPlan(prepSessionId);
+	const studyPlanQ = useStudyPlan();
 	const mocksQ = useMocks(apiEnabled ? 10 : undefined);
 	const activeStageId =
 		apiEnabled && appQ.data?.active_stage_id

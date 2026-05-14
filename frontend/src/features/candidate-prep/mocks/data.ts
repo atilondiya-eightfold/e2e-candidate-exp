@@ -8,8 +8,15 @@ export type GapSeverity = "high" | "medium" | "covered";
 export type DimensionLevel = "weak" | "partial" | "solid" | "strong";
 
 export interface TimelineStage {
+	id?: string;
 	label: string;
 	status: TimelineStageStatus;
+	focusSummary?: string | null;
+	estimatedDurationLabel?: string | null;
+	durationMin?: number | null;
+	interviewerName?: string | null;
+	interviewerTitle?: string | null;
+	scheduledAt?: number | null;
 }
 
 export interface ApplicationSummary {

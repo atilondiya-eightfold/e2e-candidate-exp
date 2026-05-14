@@ -50,6 +50,12 @@ async def proxy(path: str, request: Request, sub: CurrentUserEmail) -> Response:
     client = get_ef_client()
     body = await request.body()
     headers = _passthrough_headers(request)
+    # BFF-internal context params (frontend → BFF only). Strip before
+    # forwarding upstream so strict endpoints don't 400 on unknown keys.
+    _BFF_CTX = {"sub", "application_id", "position_id", "group_id", "profile_id"}
+    upstream_params = [
+        (k, v) for k, v in request.query_params.multi_items() if k not in _BFF_CTX
+    ]
 
     def _maybe_mock() -> Response | None:
         if settings.ENVIRONMENT != "local":
@@ -81,7 +87,7 @@ async def proxy(path: str, request: Request, sub: CurrentUserEmail) -> Response:
             return await client.request(
                 method=request.method,
                 url=f"/{path}",
-                params=request.query_params,
+                params=upstream_params,
                 content=body if body else None,
                 headers={**headers, "Authorization": f"Bearer {token}"},
             )

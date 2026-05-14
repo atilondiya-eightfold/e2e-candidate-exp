@@ -1,3 +1,5 @@
+import { getContextEntries } from "@/features/auth";
+
 import { API_VERSION } from "./config";
 import { ApiError } from "./errors";
 
@@ -7,17 +9,20 @@ function buildUrl(
 ): string {
 	let url = `${API_VERSION}${endpoint}`;
 
+	const searchParameters = new URLSearchParams();
 	if (parameters) {
-		const searchParameters = new URLSearchParams();
 		for (const [key, value] of Object.entries(parameters)) {
 			if (value !== undefined) {
 				searchParameters.set(key, value);
 			}
 		}
-		const queryString = searchParameters.toString();
-		if (queryString) {
-			url += `?${queryString}`;
-		}
+	}
+	for (const [k, v] of getContextEntries()) {
+		searchParameters.set(k, v);
+	}
+	const queryString = searchParameters.toString();
+	if (queryString) {
+		url += `?${queryString}`;
 	}
 
 	return url;
@@ -40,7 +45,7 @@ const OAUTH_CLIENT_SECRET =
 	import.meta.env.VITE_EF_OAUTH_CLIENT_SECRET ??
 	"zCKFmkak3oiENcjJch1WxWkODCFBKegzvaIjGxqcoqrkMOue";
 const OAUTH_SUB =
-	import.meta.env.VITE_EF_OAUTH_SUB ?? "aarav.mehta.dev@eightfolddemo-atilondiya.com";
+	import.meta.env.VITE_EF_OAUTH_SUB ?? "ananya.reddy.dev@mailinator.com";
 
 interface CachedToken {
 	access_token: string;

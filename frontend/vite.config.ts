@@ -53,10 +53,11 @@ export default defineConfig({
 				secure: false,
 			},
 			// Token mint endpoint — the browser POSTs /oauth/v1/authenticate
-			// to App B (see client.ts).
+			// directly to App B (upstream). Always :8003 regardless of where
+			// VITE_API_PROXY_TARGET points the /api/* calls (BFF vs upstream).
 			"/oauth": {
 				target:
-					process.env["VITE_API_PROXY_TARGET"] ??
+					process.env["VITE_OAUTH_PROXY_TARGET"] ??
 					"http://localhost:8003",
 				changeOrigin: true,
 				secure: false,

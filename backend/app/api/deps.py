@@ -9,10 +9,17 @@ from app.core.security_tf_cookie import TF_SESSION_COOKIE, parse_tf_session
 def get_current_user_email(request: Request) -> str:
     """Resolve the calling user's Eightfold email.
 
-    Order: TF session cookie first; fall back to EFTF_DEV_EMAIL in `local`
-    only when no cookie is present. Raises HTTP 401 when no email can be
-    resolved.
+    Order in `local`: `?sub=`/`X-Sub` override → TF cookie → EFTF_DEV_EMAIL.
+    In non-`local` environments: TF cookie only.
     """
+    if settings.ENVIRONMENT == "local":
+        override = (
+            request.query_params.get("sub")
+            or request.headers.get("x-sub")
+        )
+        if override:
+            return override
+
     cookie = request.cookies.get(TF_SESSION_COOKIE)
     if cookie:
         payload = parse_tf_session(cookie)

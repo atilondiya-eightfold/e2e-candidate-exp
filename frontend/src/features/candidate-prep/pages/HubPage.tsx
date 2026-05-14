@@ -8,6 +8,7 @@ import { ErrorPanel } from "../components/ErrorPanel";
 import { PillButton } from "../components/PillButton";
 import { PrepFooter } from "../components/PrepFooter";
 import { TopNav } from "../components/TopNav";
+import { useStageContent } from "../hooks";
 import { usePrepData } from "../hooks/use-prep-state";
 import type { GapDimension, MockSummary } from "../mocks/data";
 import { usePrepDemoStore } from "../store";
@@ -26,10 +27,21 @@ interface Props {
 export function HubPage({ applicationId }: Props): ReactElement {
 	const navigate = useNavigate();
 	const [aboutOpen, setAboutOpen] = useState(true);
-	// Hooks must run unconditionally before any early-return guards below.
+	const [selectedStageId, setSelectedStageId] = useState<string | null>(null);
 	const prep = usePrepData(applicationId);
 	const history = useMockHistory(DEMO_PROFILE_ID);
 	const s = strings.hub;
+
+	// Resolve "which stage's About panel is on screen" pre-early-return so
+	// the dependent useStageContent hook fires on every render (rules of
+	// hooks). Falls back to the timeline's current/active stage when the
+	// user hasn't clicked a specific stage yet.
+	const currentTimelineStage =
+		prep.data?.application.timeline.find((t) => t.status === "current") ?? null;
+	const effectiveSelectedId =
+		selectedStageId ?? currentTimelineStage?.id ?? null;
+	const stageContentQ = useStageContent(effectiveSelectedId ?? undefined);
+	const stageContent = stageContentQ.data ?? null;
 
 	// Overlay real /mock-history data on top of the demo fixture's mocks
 	// + readiness. Falls back to whatever usePrepData returned when the
@@ -113,6 +125,19 @@ export function HubPage({ applicationId }: Props): ReactElement {
 	const { application, gap, studyPlan } = prep.data;
 	const mocks = liveMocks;
 	const readinessPct = liveReadiness;
+	const selectedStage =
+		application.timeline.find((t) => t.id === effectiveSelectedId) ?? null;
+	const aboutHeading = selectedStage
+		? `About the ${selectedStage.label} stage`
+		: s.stage.aboutHeading;
+	const handleStageSelect = (stageId: string) => {
+		if (stageId === effectiveSelectedId && aboutOpen) {
+			setAboutOpen(false);
+			return;
+		}
+		setSelectedStageId(stageId);
+		setAboutOpen(true);
+	};
 
 	const startMock = () =>
 		navigate({ to: "/prep/$applicationId/mock/launch", params: { applicationId } });
@@ -172,7 +197,11 @@ export function HubPage({ applicationId }: Props): ReactElement {
 							</PillButton>
 						</div>
 					</div>
-					<ApplicationTimeline stages={application.timeline} />
+					<ApplicationTimeline
+						stages={application.timeline}
+						selectedId={effectiveSelectedId}
+						onSelect={handleStageSelect}
+					/>
 				</section>
 
 				{/* About-this-stage collapsible panel */}
@@ -180,28 +209,60 @@ export function HubPage({ applicationId }: Props): ReactElement {
 					<section className="mb-7 rounded-xl border border-[#e4e6eb] bg-[#f7f8fa] px-6 py-5">
 						<div className="mb-3 flex items-center justify-between">
 							<h2 className="text-[14px] font-semibold text-[#080809]">
-								{s.stage.aboutHeading}
+								{aboutHeading}
 							</h2>
 							<button
 								type="button"
 								onClick={() => setAboutOpen(false)}
-								className="text-[12.5px] text-[#65676b] hover:text-[#080809]"
+								aria-label={s.stage.hide}
+								className="flex h-6 w-6 items-center justify-center rounded-full text-[16px] leading-none text-[#65676b] hover:bg-[#e4e6eb] hover:text-[#080809]"
 							>
-								{s.stage.hide}
+								×
 							</button>
 						</div>
 						<div className="grid gap-6 text-[12.5px] leading-[1.6] text-[#374151] sm:grid-cols-3">
-							{(["expect", "evaluated", "questions"] as const).map((k) => {
-								const col = s.stage.columns[k];
-								return (
-									<div key={k}>
-										<div className="mb-1 text-[10.5px] font-bold tracking-wider text-[#1877f2]">
-											{col.title}
-										</div>
-										{col.body}
+							<div>
+								<div className="mb-1 text-[10.5px] font-bold tracking-wider text-[#1877f2]">
+									{s.stage.columns.expect.title}
+								</div>
+								{stageContent?.what_to_expect ||
+									selectedStage?.focusSummary ||
+									s.stage.columns.expect.body}
+								{stageContent?.tips && stageContent.tips.length > 0 && (
+									<ul className="mt-2 list-disc pl-4 text-[11.5px] text-[#65676b]">
+										{stageContent.tips.map((tip, i) => (
+											<li key={i}>{tip}</li>
+										))}
+									</ul>
+								)}
+								{selectedStage?.estimatedDurationLabel && (
+									<div className="mt-2 text-[11.5px] text-[#65676b]">
+										Duration: {selectedStage.estimatedDurationLabel}
 									</div>
-								);
-							})}
+								)}
+								{selectedStage?.interviewerName && (
+									<div className="mt-1 text-[11.5px] text-[#65676b]">
+										Interviewer: {selectedStage.interviewerName}
+										{selectedStage.interviewerTitle
+											? ` · ${selectedStage.interviewerTitle}`
+											: ""}
+									</div>
+								)}
+							</div>
+							<div>
+								<div className="mb-1 text-[10.5px] font-bold tracking-wider text-[#1877f2]">
+									{s.stage.columns.evaluated.title}
+								</div>
+								{stageContent?.how_evaluated ||
+									s.stage.columns.evaluated.body}
+							</div>
+							<div>
+								<div className="mb-1 text-[10.5px] font-bold tracking-wider text-[#1877f2]">
+									{s.stage.columns.questions.title}
+								</div>
+								{stageContent?.questions_contact ||
+									s.stage.columns.questions.body}
+							</div>
 						</div>
 					</section>
 				)}
@@ -235,23 +296,44 @@ export function HubPage({ applicationId }: Props): ReactElement {
 					</span>
 				</button>
 
-				{/* Tile grid */}
-				<div className="mb-3.5 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
-					<GapTile
-						dimensions={gap?.dimensions ?? []}
-						onOpen={openGap}
-					/>
-					<MockHistoryTile mocks={mocks} onOpen={openLastMockFeedback} />
-					<StudyTile
-						completedCount={studyPlan?.completedCount ?? 0}
-						totalCount={studyPlan?.totalCount ?? 0}
-						remainingMin={studyPlan?.totalRemainingMin ?? 0}
-						upNextTitle="Jepsen — Consistency Models"
-						upNextMin={20}
-						onOpen={openStudy}
-					/>
-					<ReadinessTile pct={readinessPct} />
-				</div>
+				{/* Readiness hero + the three contributing tiles. Readiness is
+				    derived from gap-analysis, mock history, and study-plan
+				    progress, so the three tiles render as its children. */}
+				<section className="mb-3.5 rounded-xl border border-[#e4e6eb] bg-[#fafbfc] p-5">
+					<HeroReadiness pct={readinessPct} />
+					<div className="my-4 flex items-center gap-3">
+						<div className="h-px flex-1 bg-[#e4e6eb]" />
+						<span className="text-[10.5px] font-semibold tracking-wider text-[#65676b]">
+							WHAT DRIVES THIS SCORE
+						</span>
+						<div className="h-px flex-1 bg-[#e4e6eb]" />
+					</div>
+					<div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+						<GapTile
+							dimensions={gap?.dimensions ?? []}
+							onOpen={openGap}
+						/>
+						<MockHistoryTile mocks={mocks} onOpen={openLastMockFeedback} />
+						{(() => {
+							const upSec = studyPlan?.sections.find(
+								(sec) => sec.dimensionId === studyPlan?.upNext?.sectionId,
+							);
+							const upRes = upSec?.resources.find(
+								(r) => r.id === studyPlan?.upNext?.resourceId,
+							);
+							return (
+								<StudyTile
+									completedCount={studyPlan?.completedCount ?? 0}
+									totalCount={studyPlan?.totalCount ?? 0}
+									remainingMin={studyPlan?.totalRemainingMin ?? 0}
+									upNextTitle={upRes?.title ?? "Pick a starting topic"}
+									upNextMin={upRes?.durationMin ?? 0}
+									onOpen={openStudy}
+								/>
+							);
+						})()}
+					</div>
+				</section>
 
 				<PrepFooter variant="hub" />
 			</div>
@@ -439,29 +521,23 @@ function StudyTile({
 	);
 }
 
-function ReadinessTile({ pct }: { pct: number }): ReactElement {
+function HeroReadiness({ pct }: { pct: number }): ReactElement {
 	return (
-		<div className="rounded-xl border border-[#e4e6eb] px-5 py-4.5">
-			<div className="mb-2 flex items-start justify-between">
-				<div>
-					<div className="text-[10.5px] font-semibold tracking-wider text-[#65676b]">
-						{strings.hub.tiles.readiness.eyebrow}
-					</div>
-					<div className="mt-0.5 text-[13.5px] font-semibold text-[#080809]">
-						{pct}% ready for the screen
-					</div>
-				</div>
-				<button
-					type="button"
-					onClick={() => alert(strings.hub.tiles.readiness.explanation)}
-					className="text-[12px] font-semibold text-[#1877f2] hover:underline"
-				>
-					{strings.hub.tiles.readiness.view}
-				</button>
+		<div className="flex items-center gap-4">
+			<div className="flex h-[64px] w-[64px] items-center justify-center rounded-full bg-[#1877f2] text-white">
+				<span className="text-[20px] font-bold leading-none">{pct}%</span>
 			</div>
-			<p className="mt-1 text-[11.5px] leading-[1.5] text-[#65676b]">
-				{strings.hub.tiles.readiness.explanation}
-			</p>
+			<div className="min-w-0">
+				<div className="text-[10.5px] font-semibold tracking-wider text-[#65676b]">
+					{strings.hub.tiles.readiness.eyebrow}
+				</div>
+				<div className="mt-0.5 text-[15px] font-semibold text-[#080809]">
+					{pct}% ready for the screen
+				</div>
+				<p className="mt-1 text-[11.5px] leading-[1.5] text-[#65676b]">
+					{strings.hub.tiles.readiness.explanation}
+				</p>
+			</div>
 		</div>
 	);
 }

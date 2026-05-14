@@ -5,7 +5,6 @@ import { AppShell } from "@/components/layout/AppShell";
 import { AuthErrorScreen } from "@/components/shared/AuthErrorScreen";
 import { LoadingScreen } from "@/components/shared/LoadingScreen";
 import { useAuthSession } from "@/features/auth";
-import { DemoToolbar } from "@/features/candidate-prep/components/DemoToolbar";
 import { useIdentityBootstrap } from "@/features/identity";
 import { useIdentityStore } from "@/store/identity";
 
@@ -58,12 +57,7 @@ function RootLayout(): ReactElement {
 		</AuthGate>
 	);
 	if (fullBleed) {
-		return (
-			<>
-				{inner}
-				<DemoToolbar />
-			</>
-		);
+		return <>{inner}</>;
 	}
 	return <AppShell>{inner}</AppShell>;
 }

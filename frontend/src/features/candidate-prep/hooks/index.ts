@@ -146,14 +146,14 @@ export function useStageCalendarDownload() {
 }
 
 // 8.5 — study plan
-export function useStudyPlan(prepSessionId: string | undefined) {
+// Phase 1: hardcoded sections on the upstream side, no per-candidate
+// parameters required. Backend ignores query strings other than v2's
+// reserved keys (limit/start/exclude/keyList), so we send none.
+export function useStudyPlan() {
 	return useQuery({
-		queryKey: candidatePrepKeys.studyPlan(prepSessionId ?? ""),
-		queryFn: () =>
-			cpGet<StudyPlan>("/study-plan", {
-				prepSessionId: prepSessionId ?? "",
-			}),
-		enabled: Boolean(prepSessionId),
+		queryKey: candidatePrepKeys.studyPlan(""),
+		queryFn: () => cpGet<StudyPlan>("/study-plan"),
+		staleTime: 60 * 60 * 1000,
 		retry: noRetryOnTerminalError,
 	});
 }
@@ -179,15 +179,22 @@ function useToggleStudyItem(suffix: "complete" | "uncomplete") {
 export const useCompleteStudyItem = () => useToggleStudyItem("complete");
 export const useUncompleteStudyItem = () => useToggleStudyItem("uncomplete");
 
-// 8.8 — list mocks
+// 8.8 — list mocks (history)
+interface MockHistoryResponse {
+	mocks: MockSummary[];
+	readiness_label?: string;
+	readiness_pct?: number;
+}
 export function useMocks(limit?: number) {
 	return useQuery({
 		queryKey: candidatePrepKeys.mocks(),
-		queryFn: () =>
-			cpGet<MockSummary[]>(
-				"/mocks",
+		queryFn: async () => {
+			const resp = await cpGet<MockHistoryResponse>(
+				"/candidate-prep/mock-history",
 				limit !== undefined ? { limit } : undefined,
-			),
+			);
+			return resp.mocks ?? [];
+		},
 		retry: noRetryOnTerminalError,
 	});
 }
